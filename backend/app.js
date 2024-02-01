@@ -12,6 +12,8 @@ const PORT = process.env.PORT || 3000;
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
+app.use(express.json());
+
 const {
   SERVER_BAD_REQUEST_CODE,
   ALLOWED_CORS,
