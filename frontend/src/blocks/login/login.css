@@ -1,15 +1,6 @@
 .login {
-  padding-block: 60px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  max-width: 358px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-@media (max-width: 768px) {
-  .login {
-    padding-block: 40px;
-  }
-}

@@ -1,72 +1,70 @@
-import React from "react";
-import Header from "./Header";
+import React, { useContext, useEffect, useState } from "react";
+import { api } from "../utils/Api";
 import Card from "./Card";
-//import avatar from "../images/avatar.png";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-function Main(props) {
-  const currentUser = React.useContext(CurrentUserContext);
+const Main = (props) => {
+  const {
+    onEditProfile,
+    onAddPlace,
+    onEditAvatar,
+    onCardClick,
+    onCardLike,
+    cards,
+    onCardDelete,
+  } = props;
+  const currentUser = useContext(CurrentUserContext);
+  const userName = currentUser.name;
+  const userDescription = currentUser.about;
+  const userAvatar = currentUser.avatar;
+
+  console.log(currentUser)
 
   return (
-    <>
-      <Header isWrappable={true}>
-        <p className="header__menu-item">{props.email}</p>
-        <button href="#" className="header__menu-item" onClick={props.onLogout}>
-          Выйти
-        </button>
-      </Header>
-
-      <main className="content">
-        <section className="profile">
-          <div className="profile__avatar">
+    <main className="content">
+      <section className="profile">
+        <div className="profile__profile-info">
+          <div className="profile__avatar-button" onClick={onEditAvatar}>
             <img
+              src={userAvatar}
+              alt="фото пофиля Жак-Ив Кусто"
               className="profile__avatar-image"
-              src={currentUser.avatar}
-              alt="аватар профиля"
             />
-
-            <div className="profile__section">
-              <div className="profile__name-container">
-                <h1 className="profile__name">{currentUser.name}</h1>
-                <button
-                  type="button"
-                  className="profile__create link"
-                  name="create-button"
-                  onClick={props.onEditProfile}
-                ></button>
-              </div>
-              <p className="profile__work">{currentUser.about}</p>
-            </div>
-            <button
-              className="profile__avatar-create link"
-              name="avatar-edit-button"
-              onClick={props.onEditAvatar}
-              type="button"
-            ></button>
+            <button className="profile__avatar-edit" type="button"></button>
           </div>
-          <button
-            className="profile__add link"
-            onClick={props.onAddPlace}
-            type="button"
-          ></button>
-        </section>
-
-        <section className="cards" aria-label="фото">
-          {props.cards.map((card) => {
-            return (
-              <Card
-                onCardDelete={props.onCardDelete}
-                key={card._id}
-                onCardClick={props.onCardClick}
-                onCardLike={props.onCardLike}
-                card={card}
-              />
-            );
-          })}
-        </section>
-      </main>
-    </>
+          <div className="profile__name-block">
+            <div className="profile__edit-info">
+              <h1 className="profile__name">{userName}</h1>
+              <button
+                className="profile__edit-button"
+                type="button"
+                title="Редактировать профиль"
+                onClick={onEditProfile}
+              ></button>
+            </div>
+            <h2 className="profile__job">{userDescription}</h2>
+          </div>
+        </div>
+        <button
+          className="profile__add-button"
+          type="button"
+          title="Добавить профиль"
+          onClick={onAddPlace}
+        ></button>
+      </section>
+      <section className="elements">
+        {cards.map((card) => (
+          <Card
+            key={card._id}
+            onCardDelete={onCardDelete}
+            onCardLike={onCardLike}
+            card={card}
+            onCardClick={onCardClick}
+          />
+        ))}
+      </section>
+    </main>
   );
-}
+};
 
 export default Main;

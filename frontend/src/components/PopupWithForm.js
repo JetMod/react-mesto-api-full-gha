@@ -1,38 +1,34 @@
 import React from "react";
-function PopupWithForm(props) {
-  function handlePopupMouseDown(event) {
-    if (
-      event.target === event.currentTarget ||
-      event.target.classList.contains("popup__close")
-    ) {
-      props.onClose();
-    }
-  }
 
+const PopupWithForm = ({
+  isOpen,
+  onClose,
+  title,
+  name,
+  children,
+  onSubmit,
+}) => {
   return (
-    <div
-      className={`popup popup_type_${props.name} popup_background_dark-light ${
-        props.isOpen ? "popup_opened" : ""
-      }`}
-      onMouseDown={handlePopupMouseDown}
-    >
+    <div className={`popup popup_type_${name} ${isOpen ? "popup_opened" : ""}`}>
       <div className="popup__container">
-        <button className="popup__close link" type="button"></button>
-        <h3 className="popup__title">{props.title}</h3>
+        <button
+          className="popup__cancel-button popup__cancel-button_type_add"
+          type="button"
+          title="Закрыть окно"
+          onClick={onClose}
+        />
+        <h2 className="popup__title">{title}</h2>
         <form
+          onSubmit={onSubmit}
           className="popup__form"
-          name={props.name}
-          onSubmit={props.onSubmit}
-          noValidate
+          id="formAddMesto"
+          name={name}
         >
-          {props.children}
-          <button className="popup__submit link" type="submit">
-            {props.buttonText}
-          </button>
+          {children}
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default PopupWithForm;

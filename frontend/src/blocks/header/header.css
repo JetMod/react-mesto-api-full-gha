@@ -1,16 +1,16 @@
 .header {
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  grid-template-areas: "logo menu";
-  justify-items: end;
+  margin: 0 auto 0;
+  padding: 28px 0 31.6px 27px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  max-width: 320px;
   border-bottom: 1px solid rgba(84, 84, 84, 0.7);
 }
 
-@media (max-width: 768px) {
-  .header_wrappable {
-    grid-template-areas:
-      "menu menu"
-      "logo button";
+@media screen and (min-width: 910px) {
+  .header {
+    max-width: 880px;
+    padding: 28px 0 41px 0;
   }
 }

@@ -4,6 +4,7 @@ class ConflictError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = CONFLICT_ERROR_CODE;
+    this.name = 'ConflictError';
   }
 }
 

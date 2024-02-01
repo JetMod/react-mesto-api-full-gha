@@ -1,50 +1,37 @@
 import React from "react";
-import logo from "../images/logo.svg";
-function Header({ children, isWrappable }) {
-  const [isMenuOpened, setIsMenuOpened] = React.useState(false);
+import logo from "../images/header-logo.svg";
+import {Link, useLocation} from "react-router-dom";
 
-  function handleOpenMenu() {
-    setIsMenuOpened((state) => !state);
-  }
+const Header = ({ onLogout, isLoggedIn, email}) => {
+    const {pathname} = useLocation()
 
-  return (
-    <header
-      className={
-        "header content__element content__element_type_header" +
-        (isWrappable ? " header_wrappable" : "")
-      }
-    >
-      <img src={logo} alt="Логотип Mesto" className="header__logo" />
+    return (
+        <header className="header">
+            <img className="header__logo" src={logo} alt="логотип Место"/>
 
-      {isWrappable && (
-        <button
-          type="button"
-          className={
-            "header__menu-button" +
-            (isMenuOpened ? " header__menu-button_opened" : "")
-          }
-          aria-label="Открыть меню"
-          onClick={handleOpenMenu}
-        ></button>
-      )}
+            {!isLoggedIn && (
+                pathname === "/sign-up" ? (
+                    <Link className="header__navbutton" to="/sign-in">
+                        Войти
+                    </Link>
+                ) : (
+                    <Link className="header__navbutton" to="/sign-up">
+                        Регистрация
+                    </Link>
+                ))}
 
-      {children && (
-        <nav
-          className={
-            "header__menu" + (isMenuOpened ? " header__menu_opened" : "")
-          }
-        >
-          <ul className="header__menu-list">
-            {(children.length > 1 ? children : [children]).map((item, pos) => (
-              <li className="header__menu-item" key={pos}>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
-    </header>
-  );
-}
+            {
+                isLoggedIn && (
+                    <nav className="header__user">
+                        <span>{email}</span>
+                        <button onClick={onLogout} className="header__logout">
+                            Выйти
+                        </button>
+                    </nav>
+                )
+            }
+        </header>
+    );
+};
 
 export default Header;

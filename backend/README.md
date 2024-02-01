@@ -15,8 +15,4 @@
 `npm run start` — запускает сервер   
 `npm run dev` — запускает сервер с hot-reload
 
-
-```bash
-git@github.com:JetMod/express-mesto-gha.git
-```
-### https://github.com/JetMod/express-mesto-gha
+https://v02r.github.io/express-mesto-gha

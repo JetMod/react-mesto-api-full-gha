@@ -3,14 +3,13 @@
   object-position: center;
   width: 120px;
   height: 120px;
-
   border-radius: 50%;
-  margin-right: 30px;
+  overflow: hidden;
+  margin: auto;
 }
 
-@media screen and (max-width: 920px) {
+@media screen and (min-width: 910px) {
   .profile__avatar-image {
-    flex-direction: column;
-    margin-right: 0px;
+    margin: 0;
   }
 }

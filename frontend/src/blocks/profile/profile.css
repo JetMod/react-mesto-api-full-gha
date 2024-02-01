@@ -1,18 +1,16 @@
 .profile {
-  font-family: "Inter", Arial, sans-serif;
+  margin: 0 auto 0;
+  padding: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
-  padding: 0 0 50px;
-  width: 100%;
-  min-height: 120px;
+  max-width: 320px;
+  flex-direction: column;
 }
 
-@media screen and (max-width: 920px) {
+@media screen and (min-width: 910px) {
   .profile {
-    flex-direction: column;
-    min-height: 286px;
-    padding: 0 0 36px;
+    max-width: 880px;
+    flex-direction: row;
   }
 }

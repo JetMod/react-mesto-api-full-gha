@@ -1,36 +1,34 @@
-const OK = 200;
-const SUCCESS = 201;
-const NOT_FOUND_ERROR = 404;
-const SERVER_BAD_REQUEST_CODE = 500;
-const BAD_REQUEST_CODE = 400;
-const CONFLICT_ERROR_CODE = 409;
+const CREATED_CODE = 201;
+const BAD_REQUEST_ERROR_CODE = 400;
 const UNAUTHORIZED_ERROR_CODE = 401;
 const FORBIDDEN_ERROR = 403;
+const NOT_FOUND_ERROR_CODE = 404;
+const CONFLICT_ERROR_CODE = 409;
+const INTERNAL_SERVER_ERROR_CODE = 500;
 
-const urlValidator = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?$/im;
+const URL_REGULAR_EXP = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?$/im;
 
 const ALLOWED_CORS = [
-  'http://prost.nomoredomains.monster',
-  'https://prost.nomoredomains.monster',
-  'http://api.prost.nomoredomains.monster',
-  'https://api.prost.nomoredomains.monster',
-  'http://84.252.143.154',
-  'https://84.252.143.154',
+  'http://mesto-psv.nomoredomains.monster',
+  'https://mesto-psv.nomoredomains.monster',
+  'http://api.mesto-psv.nomoredomains.monster',
+  'https://api.mesto-psv.nomoredomains.monster',
+  'http://158.160.15.128',
+  'https://158.160.15.128',
   'http://localhost:3000',
 ];
 
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 
 module.exports = {
-  SUCCESS,
-  OK,
-  NOT_FOUND_ERROR,
-  SERVER_BAD_REQUEST_CODE,
-  urlValidator,
-  BAD_REQUEST_CODE,
+  CREATED_CODE,
+  BAD_REQUEST_ERROR_CODE,
   UNAUTHORIZED_ERROR_CODE,
+  NOT_FOUND_ERROR_CODE,
   FORBIDDEN_ERROR,
   CONFLICT_ERROR_CODE,
+  INTERNAL_SERVER_ERROR_CODE,
+  URL_REGULAR_EXP,
   ALLOWED_CORS,
   DEFAULT_ALLOWED_METHODS,
 };

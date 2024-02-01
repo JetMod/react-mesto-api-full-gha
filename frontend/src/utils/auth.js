@@ -1,56 +1,68 @@
+const BASE_URL = "https://api.v02r.students.nomoredomainsmonster.ru";
+// const BASE_URL = "http://localhost:3000";
+
+const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+};
+
 class Auth {
-  constructor(baseUrl) {
-    this._baseUrl = baseUrl;
-  }
+    constructor({baseUrl, headers}) {
+        this._baseUrl = baseUrl;
+        this._headers = headers;
+    }
 
-  _getErrorFromServer(res) {
-    return res.json().then((res) => {
-      throw new Error(res.message);
-    });
-  }
+    register = ({email, password}) => {
+        return fetch(`${this._baseUrl}/signup`, {
+            method: "POST",
+            headers: this._headers,
+            body: JSON.stringify({email, password}),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return false;
+            })
+            .catch((err) => {
+                console.log(`Ошибка: ${err}`);
+            });
+    }
 
-  register({ email, password }) {
-    const url = `${this._baseUrl}/signup`;
-    return fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    }).then((res) => {
-      if (res.ok) return res.json();
-      return this._getErrorFromServer(res);
-    });
-  }
+    login = ({email, password}) => {
+        return fetch(`${this._baseUrl}/signin`, {
+            method: "POST",
+            headers: this._headers,
+            body: JSON.stringify({email, password}),
+        }).then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return false;
+        }).catch((err) => {
+            console.log(`Ошибка: ${err}`);
+        });
 
-  authorize({ email, password }) {
-    const url = `${this._baseUrl}/signin`;
-    return fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    }).then((res) => {
-      if (res.ok) return res.json();
-      return this._getErrorFromServer(res);
-    });
-  }
+    };
 
-  checkToken(token) {
-    const url = `${this._baseUrl}/users/me`;
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((res) => {
-      if (res.ok) return res.json();
-      return this._getErrorFromServer(res);
-    });
-  }
+    getUserInfo = (jwt) => {
+        return fetch(`${this._baseUrl}/users/me`, {
+            method: "GET",
+            headers: {
+                ...this._headers,
+                Authorization: `Bearer ${jwt}`,
+            },
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return false;
+            }).catch((err) => {
+                console.log(`Ошибка: ${err}`);
+            });
+    };
+
 }
 
-const auth = new Auth("https://auth.nomoreparties.co");
-export default auth;
+export default new Auth({baseUrl: BASE_URL, headers});

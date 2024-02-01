@@ -1,18 +1,14 @@
 .header__logo {
-  display: block;
-  grid-area: logo;
-  width: 142px;
-  height: 33px;
-  margin: 0 0 37px;
+  margin: 0;
+  padding: 0px;
   object-fit: contain;
-  object-position: left;
+  width: 104px;
+  height: 25px;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (min-width: 910px) {
   .header__logo {
-    width: 104px;
-    height: 25px;
-    margin: 28px 0 27px;
-    margin-left: 30px;
+    width: 142px;
+    height: 33px;
   }
 }
