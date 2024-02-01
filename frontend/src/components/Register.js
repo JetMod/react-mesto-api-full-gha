@@ -1,48 +1,55 @@
-import {useState} from "react";
-import {Link} from "react-router-dom";
+import React from 'react';
+import Header from './Header.js';
+import Footer from './Footer.js';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthenticationForm from './AuthenticationForm.js';
 
-const Register = ({onRegister}) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+function Register({ onRegistrationUser, isLoading }) {
+  const navigate = useNavigate();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        if (!email.trim() || !password.trim()) {
-            return;
-        }
-        onRegister({email, password});
-    };
+  function handleChangeEmail(e) {
+    setEmail(e.target.value);
+  }
 
-    return (
-        <div className="auth">
-            <h2 className="auth__title">Регистрация</h2>
-            <form className="auth__form" onSubmit={handleSubmit}>
-                <input
-                    className="auth__input"
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    required
-                />
-                <input
-                    className="auth__input"
-                    name="password"
-                    type="password"
-                    placeholder="Пароль"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    required
-                />
-                <button className="auth__button" type="submit">Зарегистрироваться</button>
-            </form>
-            <Link to="/sign-in" className="auth__link-login">
-                Уже зарегистрированы? Войти
-            </Link>
-        </div>
-    );
-};
+  function handleChangePassword(e) {
+    setPassword(e.target.value);
+  }
+
+  function handleSubmitForm(e) {
+    e.preventDefault();
+    onRegistrationUser({ email, password });
+  }
+
+  function handleClickHeaderButton() {
+    navigate("/signin", { replace: true });
+  }
+
+  return (
+    <>
+      <Header
+        email=""
+        valueLinkButton="Войти"
+        onClickHeaderButton={handleClickHeaderButton}
+      />
+
+      <AuthenticationForm
+        name="register"
+        title="Регистрация"
+        email={email}
+        password={password}
+        handleSubmitForm={handleSubmitForm}
+        handleChangeEmail={handleChangeEmail}
+        handleChangePassword={handleChangePassword}
+        valueSubmitButton={isLoading ? "Регистрация..." : "Зарегистрироваться"}
+      >
+        <p className="register__text">Уже зарегистрированы? <Link className="register__link" to="/signin">Войти</Link> </p>
+      </AuthenticationForm >
+
+      <Footer />
+    </>
+  )
+}
 
 export default Register;
