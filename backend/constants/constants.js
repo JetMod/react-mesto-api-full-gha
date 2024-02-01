@@ -13,8 +13,8 @@ const ALLOWED_CORS = [
   'https://prost.nomoredomains.monster',
   'http://api.prost.nomoredomains.monster',
   'https://api.prost.nomoredomains.monster',
-  'http://158.160.15.128',
-  'https://158.160.15.128',
+  'http://84.252.143.154',
+  'https://84.252.143.154',
   'http://localhost:3000',
 ];
 
