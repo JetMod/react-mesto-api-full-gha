@@ -1,4 +1,4 @@
-const BASE_URL = "https://api.prost.students.nomoredomainsmonster.ru";
+const BASE_URL = "https://api.prost.nomoredomainsmonster.ru";
 // const BASE_URL = "http://localhost:3000";
 
 const headers = {
