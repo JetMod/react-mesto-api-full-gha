@@ -79,7 +79,7 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: "https://api.prost.students.nomoredomainsmonster.ru",
+  baseUrl: "https://api.prost.nomoredomainsmonster.ru",
 
   // baseUrl: "http://localhost:3000",
   headers: {
