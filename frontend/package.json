@@ -16,7 +16,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "nmp run build && scp -r ./build/* enver@51.250.18.25:/home/enver/frontend"
   },
   "eslintConfig": {
     "extends": [
