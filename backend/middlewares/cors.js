@@ -1,6 +1,6 @@
 const allowedCors = [
-  'http://prost.frontend.nomoredomainsmonster.ru//',
-  'https://prost.frontend.nomoredomainsmonster.ru/',
+  'http://prost.nomoredomainsmonster.ru//',
+  'https://prost.nomoredomainsmonster.ru/',
   'http://api.prost.nomoredomains.monster/',
   'https://api.prost.nomoredomains.monster',
   'http://localhost:3000',
