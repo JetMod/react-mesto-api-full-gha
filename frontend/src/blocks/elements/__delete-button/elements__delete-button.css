@@ -2,19 +2,19 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  width: 18px;
-  height: 19px;
-  border: none;
-  padding: 0;
+  background-image: url(../../../images/Trash.svg);
   background-color: transparent;
-  background-image: url('../../../images/delete_icon.svg');
-  background-position: center;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
-  transition: opacity 0.5s;
+  background-size: 18px 19px;
+  height: 19px;
+  width: 18px;
+  border: 0;
+  cursor: pointer;
+  transition: opacity 0.1s linear;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-.elements__delete-button:hover {
+.element__delete:hover {
   opacity: 0.6;
-  cursor: pointer;
 }

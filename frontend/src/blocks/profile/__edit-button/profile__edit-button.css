@@ -1,29 +1,30 @@
 .profile__edit-button {
-  box-sizing: border-box;
-  margin-left: 18px;
-  width: 24px;
-  height: 24px;
-  border: 1px solid #fff;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  background: transparent;
+  margin: 0;
   padding: 0;
-  background-color: transparent;
-  background-image: url("../../../images/Edit_Button.svg");
+  width: 18px;
+  height: 18px;
+  border: 1px solid #fff;
+  background-image: url(../../../images/pen-logo.svg);
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: 10px 10px;
-  transition: opacity 0.5s;
+  background-position: 50% 50%;
+  background-size: 7, 5px 7, 5px;
+  position: relative;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 910px) {
+  .profile__edit-button {
+    width: 24px;
+    height: 24px;
+    background-size: 10px 10px;
+  }
 }
 
 .profile__edit-button:hover {
   opacity: 0.6;
-  cursor: pointer;
-}
-
-@media screen and (max-width: 680px) {
-  .profile__edit-button {
-    margin-left: 10px;
-    margin-top: 8px;
-    width: 18px;
-    height: 18px;
-    background-size: 7.5px 7.5px;
-  }
 }
