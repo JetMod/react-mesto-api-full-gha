@@ -1,4 +1,4 @@
-//const baseUrl = 'http://localhost:3000'
+//const baseUrl = 'http://localhost:3000';
 const baseUrl = 'https://api.prost.nomoredomainsmonster.ru';
 
 function sendRequestData(url, options) {
