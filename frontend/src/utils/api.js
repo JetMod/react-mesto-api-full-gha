@@ -124,7 +124,7 @@ class Api {
 /******************** class *******************/
 /* api */
 const api = new Api({
-  baseUrl: 'https://api.prost.nomoredomains.ru',
+  baseUrl: 'https://api.prost.nomoredomainsmonster.ru',
 });
 
 export default api;

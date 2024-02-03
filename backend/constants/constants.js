@@ -9,12 +9,12 @@ const INTERNAL_SERVER_ERROR_CODE = 500;
 const URL_REGULAR_EXP = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?$/im;
 
 const ALLOWED_CORS = [
-  'http://prost.nomoredomains.monster',
-  'https://prost.nomoredomains.monster',
-  'http://api.prost.nomoredomains.monster',
-  'https://api.prost.nomoredomains.monster',
-  'http://84.252.143.154',
-  'https://84.252.143.154',
+  'http://prost.nomoredomainsmonster.ru',
+  'https://prost.nomoredomainsmonster.ru',
+  'http://api.prost.nomoredomainsmonster.ru',
+  'https://api.prost.nomoredomainsmonster.ru',
+  'http://51.250.18.25',
+  'https://51.250.18.25',
   'http://localhost:3000',
 ];
 

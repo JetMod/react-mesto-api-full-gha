@@ -61,7 +61,7 @@ class ApiAuth {
 /******************** class *******************/
 /* apiAuth */
 const apiAuth = new ApiAuth({
-  baseUrl: 'https://api.prost.nomoredomains.ru',
+  baseUrl: 'https://api.prost.nomoredomainsmonster.ru',
 });
 
 export default apiAuth;
