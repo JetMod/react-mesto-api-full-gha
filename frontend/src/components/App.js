@@ -15,7 +15,7 @@ import Register from './Register';
 import Login from './Login';
 import InfoTooltip from './InfoTooltip';
 import { register, authorize, checkToken } from '../utils/Auth';
-
+//
 function App() {
 
   const navigate = useNavigate();
