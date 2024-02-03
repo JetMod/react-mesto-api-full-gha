@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
