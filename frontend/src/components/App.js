@@ -7,14 +7,14 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import ImagePopup from './ImagePopup';
 import AddPlacePopup from './AddPlacePopup';
-import api from '../utils/api';
+import api from '../utils/Api';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import HomePage from './HomePage';
 import Register from './Register';
 import Login from './Login';
 import InfoTooltip from './InfoTooltip';
-import { register, authorize, checkToken } from '../utils/auth';
+import { register, authorize, checkToken } from '../utils/Auth';
 
 function App() {
 
