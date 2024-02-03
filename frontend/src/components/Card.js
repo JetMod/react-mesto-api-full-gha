@@ -39,7 +39,8 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
             aria-label="Добавить в избранное"
             onClick={handleCardLike}
           ></button>
-          <span className="card__like-count">{card.likes.length}</span>
+          {/* <span className="card__like-count">{card.likes.length}</span> */}
+          <span className="card__like-count">{card.likes && card.likes.length}</span>
         </div>
       </div>
 
