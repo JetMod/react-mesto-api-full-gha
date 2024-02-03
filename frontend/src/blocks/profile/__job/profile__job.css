@@ -1,23 +1,30 @@
 .profile__job {
+  color: #FFF;
+  margin: 0;
   padding: 0;
-  margin: 10px 0 32px 0;
-  max-width: 282px;
-  font-style: normal;
+  font-size: 18px;
   font-weight: 400;
-  font-size: 14px;
-  text-align: center;
-  line-height: 17px;
+  line-height: 22px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  grid-column: 1 / 2;
 }
 
-@media screen and (min-width: 910px) {
+
+@media (max-width: 1023px) {
   .profile__job {
-    margin: 10px 0 0 0;
-    max-width: 336px;
-    text-align: left;
-    font-size: 18px;
-    line-height: 22px;
+    font-size: 16px;
+    line-height: 18px;
+  }
+}
+
+@media (max-width: 767px) {
+  .profile__job {
+    max-width: 282px;
+    font-size: 14px;
+    line-height: 17px;
+    grid-column: 1 / span 3;
+    grid-row: 2 / 3;
   }
 }

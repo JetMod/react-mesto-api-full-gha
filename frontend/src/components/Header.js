@@ -1,37 +1,28 @@
-import React from "react";
-import logo from "../images/header-logo.svg";
-import {Link, useLocation} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-const Header = ({ onLogout, isLoggedIn, email}) => {
-    const {pathname} = useLocation()
+function Header({ name, userEmail }) {
+  const navigate = useNavigate();
+  
+  function onSignOut() {
+    localStorage.removeItem('jwt');
+    navigate('/signin');
+  }
 
-    return (
-        <header className="header">
-            <img className="header__logo" src={logo} alt="логотип Место"/>
-
-            {!isLoggedIn && (
-                pathname === "/sign-up" ? (
-                    <Link className="header__navbutton" to="/sign-in">
-                        Войти
-                    </Link>
-                ) : (
-                    <Link className="header__navbutton" to="/sign-up">
-                        Регистрация
-                    </Link>
-                ))}
-
-            {
-                isLoggedIn && (
-                    <nav className="header__user">
-                        <span>{email}</span>
-                        <button onClick={onLogout} className="header__logout">
-                            Выйти
-                        </button>
-                    </nav>
-                )
-            }
-        </header>
-    );
-};
+  return (
+    <header className="header">
+      <div className="header__logo" />
+      {name !== 'signup' && name !== 'signin' ?
+        <div className="header__conteiner">
+          <p className="header__email">{userEmail}</p>
+          <button className="header__link-out" onClick={onSignOut}>Выйти</button>
+        </div>
+      :
+      <Link to={name === 'signup' ? '/signin' : '/signup'} className="header__link">
+      {name === 'signup' ? 'Войти' : 'Регистрация'}</Link> 
+      }
+    </header>
+  )
+}
 
 export default Header;
