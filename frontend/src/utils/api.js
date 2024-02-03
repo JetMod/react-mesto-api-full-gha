@@ -1,144 +1,130 @@
 class Api {
-  constructor({ baseUrl }) {
-    this._baseUrl = baseUrl;
+  constructor(options) {
+    this._baseUrl = options.baseUrl;
   }
 
-  loadUserInfo() {
-    const token = localStorage.getItem('jwt');
+  _checkResponse(res) {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+
+  getUserData(token) {
     return fetch(`${this._baseUrl}/users/me`, {
-      method: 'GET',
       headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
+        'Authorization': `${token}`
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
     })
+      .then(res => {
+        return this._checkResponse(res);
+      });
   }
 
-  patchUserInfo({ name, about, avatar, _id }) {
-    const token = localStorage.getItem('jwt');
+  updateUserData(newUserData, token) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: {
-        authorization: `Bearer ${token}`,
+        'Authorization': `${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name,
-        about,
-        avatar,
-        _id,
+        name: newUserData.name,
+        about: newUserData.about
       })
     })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+      .then(res => {
+        return this._checkResponse(res);
+      });
   }
 
-  getInitialCards() {
-    const token = localStorage.getItem('jwt');
-    return fetch(`${this._baseUrl}/cards`, {
-      method: 'GET',
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-  }
-
-  addCard({ name, link }) {
-    const token = localStorage.getItem('jwt');
-    return fetch(`${this._baseUrl}/cards`, {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name,
-        link,
-      })
-    })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-  }
-
-  changeLikeCardStatus(cardId, like) {
-    const token = localStorage.getItem('jwt');
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: like ? 'PUT' : 'DELETE',
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-  }
-
-  deleteCard(cardId) {
-    const token = localStorage.getItem('jwt');
-    return fetch(`${this._baseUrl}/cards/${cardId}`, {
-      method: 'DELETE',
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-  }
-
-  patchAvatar({ avatar }) {
-    const token = localStorage.getItem('jwt');
+  updateUserAvatar(newLink, token) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: {
-        authorization: `Bearer ${token}`,
+        'Authorization': `${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        avatar,
+        avatar: newLink
       })
     })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+      .then(res => {
+        return this._checkResponse(res);
+      });
   }
+
+  getInitialCards(token) {
+    return fetch(`${this._baseUrl}/cards`, {
+      headers: {
+        'Authorization': `${token}`
+      }
+    })
+      .then(res => {
+        return this._checkResponse(res);
+      });
+  }
+
+  likeCard(cardId, token) {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `${token}`
+      },
+    })
+      .then(res => {
+        return this._checkResponse(res);
+      });
+  }
+
+  dislikeCard(cardId, token) {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `${token}`
+      },
+    })
+      .then(res => {
+        return this._checkResponse(res);
+      });
+  }
+
+  postNewCard(newImageData, token) {
+    return fetch(`${this._baseUrl}/cards`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: newImageData.name,
+        link: newImageData.link
+      })
+    })
+      .then(res => {
+        return this._checkResponse(res);
+      });
+  }
+
+  deleteCard(cardId, token) {
+    return fetch(`${this._baseUrl}/cards/` + cardId, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => {
+        return this._checkResponse(res);
+      });
+  }
+
 }
 
+/******************** class *******************/
+/* api */
 const api = new Api({
-  //baseUrl: 'http://localhost:3000',
   baseUrl: 'https://api.prost.nomoredomainsmonster.ru',
-})
+});
 
 export default api;

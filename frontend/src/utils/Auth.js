@@ -1,44 +1,68 @@
-//const baseUrl = 'http://localhost:3000';
-const baseUrl = 'https://api.prost.nomoredomainsmonster.ru';
+const BASE_URL = "https://api.prost.nomoredomainsmonster.ru";
+// const BASE_URL = "http://localhost:3000";
 
-function sendRequestData(url, options) {
-  return fetch(url, options)
-  .then((res) => {
-    if(res.ok) {
-      return res.json();
+const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+};
+
+class Auth {
+    constructor({baseUrl, headers}) {
+        this._baseUrl = baseUrl;
+        this._headers = headers;
     }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-}
 
-export function register(email, password) {
-  return sendRequestData(`${baseUrl}/signup`, {
-    method: 'POST',
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      password: password,
-      email: email,
-    })
-  })
-}
-
-export function authorize(email, password) {
-  return sendRequestData(`${baseUrl}/signin`, {
-    method: 'POST',
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      password: password,
-      email: email,
-    })
-  })
-}
-
-export function checkToken(token) {
-  return sendRequestData(`${baseUrl}/users/me`, {
-    method: 'GET',
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization" : `Bearer ${token}`
+    register = ({email, password}) => {
+        return fetch(`${this._baseUrl}/signup`, {
+            method: "POST",
+            headers: this._headers,
+            body: JSON.stringify({email, password}),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return false;
+            })
+            .catch((err) => {
+                console.log(`Ошибка: ${err}`);
+            });
     }
-  })
+
+    login = ({email, password}) => {
+        return fetch(`${this._baseUrl}/signin`, {
+            method: "POST",
+            headers: this._headers,
+            body: JSON.stringify({email, password}),
+        }).then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return false;
+        }).catch((err) => {
+            console.log(`Ошибка: ${err}`);
+        });
+
+    };
+
+    getUserInfo = (jwt) => {
+        return fetch(`${this._baseUrl}/users/me`, {
+            method: "GET",
+            headers: {
+                ...this._headers,
+                Authorization: `Bearer ${jwt}`,
+            },
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return false;
+            }).catch((err) => {
+                console.log(`Ошибка: ${err}`);
+            });
+    };
+
 }
+
+export default new Auth({baseUrl: BASE_URL, headers});

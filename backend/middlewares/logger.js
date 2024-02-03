@@ -1,6 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const winston = require('winston');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const expressWinston = require('express-winston');
 
+// создадим логгер запросов
 const requestLogger = expressWinston.logger({
   transports: [
     new winston.transports.File({ filename: 'request.log' }),
@@ -8,6 +11,7 @@ const requestLogger = expressWinston.logger({
   format: winston.format.json(),
 });
 
+// логгер ошибок
 const errorLogger = expressWinston.errorLogger({
   transports: [
     new winston.transports.File({ filename: 'error.log' }),

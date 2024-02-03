@@ -1,38 +1,55 @@
-import SectionSign from "./SectionSign";
-import { Link } from "react-router-dom";
-import useForm from "../hooks/useForm";
-import { useEffect } from "react";
+import React from 'react';
+import Header from './Header.js';
+import Footer from './Footer.js';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthenticationForm from './AuthenticationForm.js';
 
-function Register({ onRegister }) {
+function Register({ onRegistrationUser, isLoading }) {
+  const navigate = useNavigate();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  const { values, handleChange, setValues } = useForm({ email: '', password: '' });
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    
-    onRegister({ email: values.email, password: values.password });
-    setValues({ email: '', password: '' });
+  function handleChangeEmail(e) {
+    setEmail(e.target.value);
   }
 
-  useEffect(() => {
-    setValues({ email: '', password: '' });
-  }, [setValues]);
+  function handleChangePassword(e) {
+    setPassword(e.target.value);
+  }
+
+  function handleSubmitForm(e) {
+    e.preventDefault();
+    onRegistrationUser({ email, password });
+  }
+
+  function handleClickHeaderButton() {
+    navigate("/signin", { replace: true });
+  }
 
   return (
-    <SectionSign 
-      name="signup"
-      title="Регистрация"
-      onSubmit={handleSubmit}>
-        <input type="email" name="email" value={values.email} onChange={handleChange} className="login-register__input" placeholder="Email" minLength="2" maxLength="40" required/>
-        <span className="popup__error"/>
-        <input type="password" name="password" value={values.password} onChange={handleChange} className="login-register__input" placeholder="Пароль" minLength="2" maxLength="40" required/>
-        <span className="popup__error"/>
-        <button type="submit" className="login-register__button login-register__button_type_signup">Зарегистрироваться</button>
-        <p className="login-register__subtitle">Уже зарегистрированы? 
-          <Link to={`/signin`} className="login-register__signup-link"> Войти</Link>
-        </p>
-    </SectionSign>
-  );
+    <>
+      <Header
+        email=""
+        valueLinkButton="Войти"
+        onClickHeaderButton={handleClickHeaderButton}
+      />
+
+      <AuthenticationForm
+        name="register"
+        title="Регистрация"
+        email={email}
+        password={password}
+        handleSubmitForm={handleSubmitForm}
+        handleChangeEmail={handleChangeEmail}
+        handleChangePassword={handleChangePassword}
+        valueSubmitButton={isLoading ? "Регистрация..." : "Зарегистрироваться"}
+      >
+        <p className="register__text">Уже зарегистрированы? <Link className="register__link" to="/signin">Войти</Link> </p>
+      </AuthenticationForm >
+
+      <Footer />
+    </>
+  )
 }
 
 export default Register;

@@ -1,23 +1,23 @@
-import usePopupClose from '../hooks/usePopupClose';
+import React from 'react';
 
-function PopupWithForm({ title, name, containerName, children, textBtn, isOpen, onClose, onSubmit }) {
-
-  usePopupClose(isOpen, onClose);
-
+function PopupWithForm({ namePopup, nameForm, title, valueSubmitButton, isOpen, onClose, onSubmit, children }) {
   return (
-    <div className={`popup ${isOpen ? 'popup_opened' : ''}`}>
-      <div className={`popup__${containerName}`}>
-        <button onMouseDown={onClose} type="reset" className="popup__button-close" aria-label="Закрыть" />
-        <h2 className="popup__title">{title}</h2>
-        <form onSubmit={onSubmit} name={`${name}-form`} className={`popup__form popup__form_${name}`}>
+    <div className={`popup ${namePopup} ${isOpen ? "popup_is-opened" : ""}`}>
+      <div className={`${namePopup}__container`}>
+        <button type="button" className={`popupClose-button ${namePopup}__close-button`} onClick={onClose}></button>
+        <h2 className={`${namePopup}__title`}>{title}</h2>
+        <form
+          className={`popup__form ${nameForm} ${namePopup}__form`}
+          name={`${nameForm}`}
+          onSubmit={onSubmit}
+        >
           {children}
-          <button type="submit" className={`popup__button popup__button_type_${name}`}>
-            {textBtn}
-          </button>
+          <input type="submit" className="popup__button-save popup__button-save_avalible"
+            value={valueSubmitButton} />
         </form>
       </div>
     </div>
-  );
+  )
 }
 
 export default PopupWithForm;
