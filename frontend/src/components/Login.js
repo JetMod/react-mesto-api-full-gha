@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "./Header";
-import auth from "../utils/auth";
+import auth from "../utils/Auth";
 import api from '../utils/api';
 
 function Login({ handleShowInfoMessage, onLogin }) {
