@@ -16,8 +16,8 @@ import { Route, Routes, Navigate, useNavigate } from "react-router-dom"; // им
 import Login from "./sign-in/Login";
 import Register from "./sign-up/Register";
 import InfoTooltip from "./InfoTooltip";
-import * as auth from "../utils/auth";
-import * as Api from "../utils/Api";
+import * as auth from "../utils/Auth";
+import * as Api from "../utils/api";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
