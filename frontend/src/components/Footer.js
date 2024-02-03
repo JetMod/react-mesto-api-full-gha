@@ -1,11 +1,7 @@
-import React from 'react';
-
-function Footer() {
+export default function Footer(props) {
   return (
-    <footer className="footer root__footer">
-      <p className="footer__text">&copy;&nbsp;{(new Date()).getFullYear()} Mesto Russia</p>
+    <footer className="footer page__footer">
+      <p className="footer__copyright">© {props.date} Mesto Russia</p>
     </footer>
-  )
+  );
 }
-
-export default Footer;

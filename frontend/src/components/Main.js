@@ -1,77 +1,62 @@
-import React from 'react';
-import Header from './Header.js';
-import Footer from './Footer.js';
-import Card from './Card.js';
-import avatarEdit from '../images/avatar_edit.png'
-import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
-import { useNavigate } from 'react-router-dom';
+// noinspection JSUnresolvedVariable
+import React, { useContext } from "react";
+import Card from "./Card";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import Footer from "./Footer";
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLikeClick, onCardDeleteButtonClick, cards, userAuthData, signOut}) {
-  const navigate = useNavigate();
-  const currentUser = React.useContext(CurrentUserContext);
-  const cardsElements = cards.map((card) => (
-    <Card
-      card={card}
-      key={card._id}
-      onCardClick={onCardClick}
-      onCardLikeClick={onCardLikeClick}
-      onCardDeleteButtonClick={onCardDeleteButtonClick}
-    />
-  ))
-
-  function handleClickHeaderButton() {
-    signOut();
-    navigate("/signup", { replace: true });
-  }
-
+export default function Main(props) {
+  const currentUser = useContext(CurrentUserContext);
   return (
     <>
-      <Header
-        email={userAuthData.email}
-        valueLinkButton="Выйти"
-        onClickHeaderButton={handleClickHeaderButton}
-      />
-
-      <main className="content">
-        <section className="profile root__profile">
-          <div className="profile__avatar-section" onClick={onEditAvatar}>
+      <main>
+        <section className="profile page__profile">
+          <button
+            onClick={props.handleEditAvatarClick}
+            className="profile__avatar-btn"
+            type="button"
+          >
             <img
               className="profile__avatar"
-              alt="Аватар"
-              src={`${currentUser.avatar}`}
+              src={currentUser.avatar}
+              alt="Аватарка"
             />
-            <img
-              className="profile__edit-icon"
-              src={`${avatarEdit}`}
-              alt="Изменить"
-            />
-          </div>
+          </button>
           <div className="profile__info">
             <h1 className="profile__name">{currentUser.name}</h1>
-            <button type="button"
-              className="profile__edit-button"
-              aria-label="Редактировать"
-              onClick={onEditProfile}>
-            </button>
-            <p className="profile__activity">{currentUser.about}</p>
+            <button
+              onClick={props.handleEditProfileClick}
+              aria-label="Редактировать профиль"
+              type="button"
+              className="profile__edit-btn"
+            />
+            <p className="profile__subtitle"> {currentUser.about}</p>
           </div>
-          <button type="button"
-            className="profile__add-button"
-            aria-label="Добавить"
-            onClick={onAddPlace}>
-          </button>
+          <button
+            onClick={props.handleAddPlaceClick}
+            aria-label="Добавление карточки"
+            type="button"
+            className="profile__add-btn"
+          />
         </section>
-
-        <section className="elements root__elements" aria-label="Интересные места">
-          <ul className="elements__list">
-            {cardsElements};
+        <section className="elements page__cards">
+          <ul className="elements__grids list">
+            {props.cards.map((card) => (
+              <Card
+                key={card._id}
+                name={card.name}
+                link={card.link}
+                ownerId={card.owner}
+                likes={card.likes}
+                onCardLike={props.onCardLike}
+                cardId={card._id}
+                onCardDeleteClick={props.onCardDeleteClick}
+                onCardClick={props.onCardClick}
+              />
+            ))}
           </ul>
         </section>
       </main>
-
-      <Footer />
+      <Footer date={new Date().getFullYear()} />
     </>
-  )
+  );
 }
-
-export default Main;

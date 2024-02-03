@@ -1,20 +1,10 @@
-import React from 'react';
+import Popup from "./Popup";
 
-function ImagePopup({ card, onClose }) {
+export default function ImagePopup({ card, isOpen, onClose }) {
   return (
-    <div className={`popup popup-image ${card ? "popup_is-opened" : ""}`}>
-      <div className="popup-image__container">
-        <button type="button" className="popupClose-button popup-image__close-button" onClick={onClose}></button>
-        <figure className="popup-image__figure">
-          <img className="popup-image__img"
-            src={card?.link}
-            alt={card?.name}
-          />
-          <figcaption className="popup-image__figcaption">{card?.name}</figcaption>
-        </figure>
-      </div>
-    </div>
-  )
+    <Popup isOpen={isOpen} name="img-card" onClose={onClose} onImgClass={true}>
+      <img className="popup__zoom-image" src={card.link} alt={card.name} />
+      <h3 className="popup__zoom-title">{card.name}</h3>
+    </Popup>
+  );
 }
-
-export default ImagePopup;

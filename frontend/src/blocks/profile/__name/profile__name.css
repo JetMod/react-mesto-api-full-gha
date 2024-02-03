@@ -1,19 +1,24 @@
 .profile__name {
-  max-width: 294px;
-  margin: 0;
+  font-size: 2.625rem;
+  line-height: 3rem;
   font-weight: 500;
-  font-size: 42px;
-  line-height: 1.14;
+  margin: 0;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 
-@media screen and (max-width: 680px) {
+/* Landscape phones and portrait tablets */
+@media (max-width: 650px) {
   .profile__name {
-    margin-left: 27px;
-    max-width: 189px;
-    font-size: 27px;
-    line-height: 1.22;
+    font-size: max(1.688rem, min(5vw, 2.625rem));
+  }
+}
+
+@media (max-width: 375px) {
+  .profile__name {
+    font-size: 1.688rem;
+    line-height: normal;
+    text-align: center;
   }
 }

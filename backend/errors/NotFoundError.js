@@ -1,10 +1,9 @@
-const { NOT_FOUND_ERROR_CODE } = require('../constants/constants');
+const { NOT_FOUND } = require('./statusCode');
 
 class NotFoundError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = NOT_FOUND_ERROR_CODE;
-    this.name = 'NotFoundError';
+    this.statusCode = NOT_FOUND;
   }
 }
 

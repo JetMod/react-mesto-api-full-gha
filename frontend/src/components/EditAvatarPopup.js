@@ -1,42 +1,56 @@
-import React from 'react';
-import PopupWithForm from './PopupWithForm.js';
+import React, { useEffect, useRef } from "react";
+import PopupWithForm from "./PopupWithForm";
+import useFormWithValidation from "../hooks/useFormWithValidation";
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
-  const linkAvatar = React.useRef();
+export default function EditAvatarPopup(props) {
+  const ref = useRef();
 
-  React.useEffect(() => {
-    linkAvatar.current.value = '';
-  }, [isOpen]);
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormWithValidation({
+      updInput: "",
+    });
 
-  function handleSubmitForm(e) {
-    e.preventDefault();
-    const newLink = linkAvatar.current.value;
-    onUpdateAvatar(newLink);
+  function handleSubmit(evt) {
+    evt.preventDefault();
+
+    if (isValid) {
+      props.onUpdateAvatar({
+        avatar: ref.current.value,
+      });
+    }
   }
+
+  useEffect(() => {
+    if (!props.isOpen) {
+      resetForm();
+    }
+  }, [props.onClose, props.isOpen, resetForm]);
 
   return (
     <PopupWithForm
+      submitTitle={props.isLoading ? "Обновляем..." : "Обновить"}
+      name="upd-avatar"
       title="Обновить аватар"
-      namePopup="popup-avatar"
-      nameForm="form-avatar"
-      valueSubmitButton={isLoading ? "Сохранение..." : "Сохранить"}
-      isOpen={isOpen}
-      onClose={onClose}
-      onSubmit={handleSubmitForm}
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSubmit={handleSubmit}
+      isValid={isValid}
     >
-      <fieldset className="form-avatar__input-container">
-        <input type="url"
-          className="popup__input form-avatar__item form-avatar__item_el_link"
-          id="linkAvatar"
-          name="linkAvatar"
-          placeholder="Ссылка на аватар"
-          required
-          ref={linkAvatar}
-        />
-        <span id="linkAvatar-error" className="error"></span>
-      </fieldset>
+      <input
+        id="upd-input"
+        ref={ref}
+        className={`form__input ${!errors.updInput ? "" : "form__input-error"}`}
+        onChange={handleChange}
+        type="url"
+        value={values.updInput || ""}
+        name="updInput"
+        placeholder="Ссылка на картинку"
+        required
+      />
+      <span className="form__span-error upd-input-error">
+        {" "}
+        {errors.updInput}{" "}
+      </span>
     </PopupWithForm>
-  )
+  );
 }
-
-export default EditAvatarPopup;

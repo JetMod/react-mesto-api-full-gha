@@ -1,19 +1,34 @@
-import React from 'react';
-import headerLogo from "../images/header_logo.svg";
+import logo from "../images/logo.svg";
+import burger_opn from "../images/burger_menu.svg";
+import burger_close from "../images/burger_close.svg";
+import NavBar from "./NavBar";
+import { useState } from "react";
 
-function Header({email, valueLinkButton, onClickHeaderButton}) {
-  
+export default function Header({ loggedIn, userData, signOut }) {
+  const [menuVisible, setMenuVisible] = useState(true);
   return (
-    <header className="header root__header">
-      <div className="header__logo-container">
-        <img className="logo" src={headerLogo} alt="Логотип" />
+    <header
+      className={`header page__header ${!loggedIn ? "header__mobile" : ""} `}
+    >
+      <div className="header__wrap">
+        <img className="header__logo" src={logo} alt="логотип Mesto" />
+        {loggedIn && (
+          <img
+            onClick={() => setMenuVisible(!menuVisible)}
+            className="header__btn"
+            src={menuVisible ? burger_opn : burger_close}
+            alt="меню"
+          />
+        )}
       </div>
-      <div className="header__info-container">
-        <p className="header__user-email">{email}</p>
-        <button type="button" className="header__login-out-button" onClick={onClickHeaderButton}>{valueLinkButton}</button>
-      </div>
+      {
+        <NavBar
+          menuVisible={menuVisible}
+          signOut={signOut}
+          loggedIn={loggedIn}
+          userData={userData}
+        />
+      }
     </header>
-  )
+  );
 }
-
-export default Header;

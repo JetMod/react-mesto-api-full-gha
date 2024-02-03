@@ -1,130 +1,93 @@
-class Api {
-  constructor(options) {
-    this._baseUrl = options.baseUrl;
-  }
+const _api = {
+  //BASE_URL: "http://localhost:5000/",
+  BASE_URL: "https://api.prost.nomoredomainsmonster.ru/",
+  HEADERS: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+};
 
-  _checkResponse(res) {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  }
-
-  getUserData(token) {
-    return fetch(`${this._baseUrl}/users/me`, {
-      headers: {
-        'Authorization': `${token}`
-      }
-    })
-      .then(res => {
-        return this._checkResponse(res);
-      });
-  }
-
-  updateUserData(newUserData, token) {
-    return fetch(`${this._baseUrl}/users/me`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: newUserData.name,
-        about: newUserData.about
-      })
-    })
-      .then(res => {
-        return this._checkResponse(res);
-      });
-  }
-
-  updateUserAvatar(newLink, token) {
-    return fetch(`${this._baseUrl}/users/me/avatar`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        avatar: newLink
-      })
-    })
-      .then(res => {
-        return this._checkResponse(res);
-      });
-  }
-
-  getInitialCards(token) {
-    return fetch(`${this._baseUrl}/cards`, {
-      headers: {
-        'Authorization': `${token}`
-      }
-    })
-      .then(res => {
-        return this._checkResponse(res);
-      });
-  }
-
-  likeCard(cardId, token) {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `${token}`
-      },
-    })
-      .then(res => {
-        return this._checkResponse(res);
-      });
-  }
-
-  dislikeCard(cardId, token) {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `${token}`
-      },
-    })
-      .then(res => {
-        return this._checkResponse(res);
-      });
-  }
-
-  postNewCard(newImageData, token) {
-    return fetch(`${this._baseUrl}/cards`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: newImageData.name,
-        link: newImageData.link
-      })
-    })
-      .then(res => {
-        return this._checkResponse(res);
-      });
-  }
-
-  deleteCard(cardId, token) {
-    return fetch(`${this._baseUrl}/cards/` + cardId, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => {
-        return this._checkResponse(res);
-      });
-  }
-
+function _request(url, options) {
+  return fetch(url, options).then(_getResponseData);
 }
 
-/******************** class *******************/
-/* api */
-const api = new Api({
-  baseUrl: 'https://api.prost.nomoredomainsmonster.ru',
-});
+function _getResponseData(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
+}
 
-export default api;
+// Api------------------------------------------------------------------> Users
+// Инициализация Users
+export const getDataUser = () => {
+  return _request(_api.BASE_URL + "users/me", {
+    method: "GET",
+    credentials: "include",
+    headers: _api.HEADERS,
+  });
+};
+// Изменение данных User
+export const saveDataInfo = (profileInfo) => {
+  return _request(_api.BASE_URL + "users/me", {
+    method: "PATCH",
+    credentials: "include",
+    headers: _api.HEADERS,
+    body: JSON.stringify({
+      name: profileInfo.name,
+      about: profileInfo.about,
+    }),
+  });
+};
+// Изменение аватара User
+export const saveProfileAvatar = (profileAvatar) => {
+  return _request(_api.BASE_URL + "users/me/avatar", {
+    method: "PATCH",
+    credentials: "include",
+    headers: _api.HEADERS,
+    body: JSON.stringify({ avatar: profileAvatar.avatar }),
+  });
+};
+
+// Api------------------------------------------------------------------> Card
+
+// Инициализация Card
+export const getInitialCards = () => {
+  return _request(_api.BASE_URL + "cards", {
+    method: "GET",
+    credentials: "include",
+    headers: _api.HEADERS,
+  });
+};
+
+// Добавление карточки
+export const saveCardInfo = (cardInfo) => {
+  return _request(_api.BASE_URL + "cards", {
+    method: "POST",
+    credentials: "include",
+    headers: _api.HEADERS,
+    body: JSON.stringify({
+      name: cardInfo.name,
+      link: cardInfo.link,
+    }),
+  });
+};
+
+// Удаление карточки
+export const deleteCard = (cardId) => {
+  return _request(_api.BASE_URL + `cards/${cardId}`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: _api.HEADERS,
+  });
+};
+
+// Удаление/Добавление лайка
+export const changeLikeCardStatus = (cardId, isLiked) => {
+  const method = isLiked ? "PUT" : "DELETE";
+  return _request(_api.BASE_URL + `cards/${cardId}/likes`, {
+    method: method,
+    credentials: "include",
+    headers: _api.HEADERS,
+  });
+};

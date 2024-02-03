@@ -1,26 +1,16 @@
-import check from '../images/check.svg';
-import xmark from '../images/xmark.svg';
+import successImg from "../images/tooltip.svg";
+import errorImg from "../images/tooltip_error.svg";
+import Popup from "./Popup";
 
-const InfoTooltip = ({ isOpen , onClose, isSuccess }) => {
-    return (
-        <div className={`popup ${isOpen ? 'popup_opened' : ''}`}>
-            <div className="popup__container">
-                <button type="button" className="popup__cancel-button" onClick={onClose} />
-                <img
-                    src={isSuccess ? check : xmark}
-                    alt={
-                        isSuccess ? 'Вы успешно зарегистрировались' : 'Что-то пошло не так'
-                    }
-                    className="popup__bigicon"
-                />
-                <h3 className="popup__title-signup">
-                    {isSuccess
-                        ? 'Вы успешно зарегистрировались!'
-                        : 'Что-то пошло не так! Попробуйте ещё раз.'}
-                </h3>
-            </div>
-        </div>
-    );
-};
-
-export default InfoTooltip;
+export default function InfoTooltip({ onClose, isOpen, tooltip }) {
+  return (
+      <Popup isOpen={isOpen} name="tooltip" onClose={onClose}>
+          <img
+              className="popup__img"
+              src={tooltip.image ? successImg : errorImg}
+              alt={tooltip.message}
+          />
+          <h3 className="popup__title">{tooltip.message}</h3>
+      </Popup>
+  );
+}

@@ -1,67 +1,90 @@
-import React from 'react';
-import PopupWithForm from './PopupWithForm.js';
-import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
+import React, { useEffect, useContext } from "react";
+import PopupWithForm from "./PopupWithForm";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import useFormWithValidation from "../hooks/useFormWithValidation";
 
-function EditProfilePopup({ isOpen, onClose, onUpdateUser, isLoading }) {
-  const currentUser = React.useContext(CurrentUserContext);
-  const [name, setName] = React.useState('');
-  const [about, setAbout] = React.useState('');
+export default function EditProfilePopup(props, isOpen) {
+  const { values, handleChange, errors, isValid, resetForm, setValues } =
+    useFormWithValidation({
+      user_name: "",
+      user_job: "",
+    });
 
-  React.useEffect(() => {
-    setName(currentUser.name);
-    setAbout(currentUser.about);
+  const currentUser = useContext(CurrentUserContext);
+
+  useEffect(() => {
+    if (currentUser.name && currentUser.about) {
+      setValues({
+        user_name: currentUser.name,
+        user_job: currentUser.about,
+      });
+    }
+    if (!isOpen) {
+      resetForm();
+    }
   }, [isOpen, currentUser]);
 
-  function handleChangeName(e) {
-    setName(e.target.value);
-  }
+  useEffect(() => {
+    if (!isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
 
-  function handleChangeAbout(e) {
-    setAbout(e.target.value);
-  }
-
-  function handleSubmitForm(e) {
-    e.preventDefault();
-    onUpdateUser({name, about});
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    if (isValid) {
+      props.onUpdateUser({
+        name: values.user_name,
+        about: values.user_job,
+      });
+    }
   }
 
   return (
     <PopupWithForm
+      name="edit-user"
       title="Редактировать профиль"
-      namePopup="popup-profile"
-      nameForm="form-profile"
-      valueSubmitButton={isLoading ? "Сохранение..." : "Сохранить"}
-      isOpen={isOpen}
-      onClose={onClose}
-      onSubmit={handleSubmitForm}
+      submitTitle={props.isLoading ? "Сохраняем..." : "Сохранить"}
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSubmit={handleSubmit}
+      isValid={isValid}
     >
-      <fieldset className="form-profile__input-container">
-        <input
-          type="text"
-          className="popup__input form-profile__item form-profile__item_el_name"
-          id="name"
-          name="name"
-          placeholder="Ваше имя"
-          required
-          minLength="2"
-          maxLength="40"
-          value={name || ''}
-          onChange={handleChangeName} />
-        <span id="name-error" className="error"></span>
-        <input type="text"
-          className="popup__input form-profile__item form-profile__item_el_activity"
-          id="activity"
-          name="activity"
-          placeholder="О себе"
-          required
-          minLength="2"
-          maxLength="200"
-          value={about || ''}
-          onChange={handleChangeAbout} />
-        <span id="activity-error" className="error"></span>
-      </fieldset>
+      <input
+        id="name-input"
+        className={`form__input form__input_string_name ${
+          !errors.user_name ? "" : "form__input-error"
+        }`}
+        type="text"
+        value={values.user_name || ""}
+        onChange={handleChange}
+        name="user_name"
+        placeholder="Ваше имя"
+        maxLength={40}
+        minLength={2}
+        required
+      />
+      <span className="form__span-error name-input-error">
+        {" "}
+        {errors.user_name}{" "}
+      </span>
+      <input
+        id="user-job-input"
+        className={`form__input form__input_string_job ${
+          !errors.user_job ? "" : "form__input-error"
+        }`}
+        type="text"
+        name="user_job"
+        value={values.user_job || ""}
+        onChange={handleChange}
+        placeholder="О себе"
+        maxLength={200}
+        minLength={2}
+        required
+      />
+      <span className="form__span-error user-job-input-error">
+        {errors.user_job}
+      </span>
     </PopupWithForm>
-  )
+  );
 }
-
-export default EditProfilePopup;

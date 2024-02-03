@@ -1,28 +1,12 @@
-const allowedCors = [
-  'http://prost.nomoredomainsmonster.ru//',
-  'https://prost.nomoredomainsmonster.ru/',
-  'http://api.prost.nomoredomains.monster/',
-  'https://api.prost.nomoredomains.monster',
-  'http://localhost:3000',
-  'https://localhost:3000',
-  'http://localhost:3001',
-  'https://localhost:3001',
-  'http://127.0.0.1:3001',
-  'http://127.0.0.1:3000',
-];
+const { NODE_ENV, ALLOWED_CORS_PRODUCTION } = process.env;
+const ALLOWED_CORS = NODE_ENV === 'production' ? ALLOWED_CORS_PRODUCTION.split(', ') : ['https://localhost:3000', 'http://localhost:3000', 'localhost:3000'];
 
-module.exports = (req, res, next) => {
-  const { origin } = req.headers;
-  const { method } = req;
-  const requestHeaders = req.headers['access-control-request-headers'];
-  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-  if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-    res.header('Access-Control-Allow-Headers', requestHeaders);
-    res.end();
-  }
-  next();
+const CORS_OPTIONS = {
+  credentials: true,
+  origin: ALLOWED_CORS,
+  exposedHeaders: ['set-cookie'],
+};
+
+module.exports = {
+  CORS_OPTIONS,
 };

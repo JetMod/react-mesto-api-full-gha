@@ -1,23 +1,34 @@
-import React from 'react';
-
-function PopupWithForm({ namePopup, nameForm, title, valueSubmitButton, isOpen, onClose, onSubmit, children }) {
+import Popup from "./Popup";
+export default function PopupWithForm({
+  isOpen,
+  onClose,
+  name,
+  title,
+  onSubmit,
+  submitTitle,
+  children,
+  elemClass,
+  isValid,
+}) {
   return (
-    <div className={`popup ${namePopup} ${isOpen ? "popup_is-opened" : ""}`}>
-      <div className={`${namePopup}__container`}>
-        <button type="button" className={`popupClose-button ${namePopup}__close-button`} onClick={onClose}></button>
-        <h2 className={`${namePopup}__title`}>{title}</h2>
-        <form
-          className={`popup__form ${nameForm} ${namePopup}__form`}
-          name={`${nameForm}`}
+    <Popup isOpen={isOpen} name={name} onClose={onClose} >
+      <h3 className="popup__title">{title}</h3>
+      <form
+          className={`form form_${name}`}
+          name={`popup__form-${name}`}
           onSubmit={onSubmit}
+      >
+        {children}
+        <button
+            disabled={!isValid}
+            className={`form__input-btn ${
+                !isValid ? "form__input-btn_disabled" : ""
+            } ${elemClass ? "form__del-btn" : ""}`}
+            type="submit"
         >
-          {children}
-          <input type="submit" className="popup__button-save popup__button-save_avalible"
-            value={valueSubmitButton} />
-        </form>
-      </div>
-    </div>
-  )
+          {submitTitle}
+        </button>
+      </form>
+    </Popup>
+  );
 }
-
-export default PopupWithForm;
