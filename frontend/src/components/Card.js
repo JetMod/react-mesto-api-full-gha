@@ -3,9 +3,8 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = React.useContext(CurrentUserContext);
-  const isOwner = card.owner?._id === currentUser._id;
-  // const isLiked = card.likes.some((person) => person._id === currentUser._id);
-  const isLiked = (card.likes || []).some((person) => person && person._id === currentUser._id);
+  const isOwner = card.owner._id === currentUser._id;
+  const isLiked = card.likes.some((person) => person._id === currentUser._id);
   const activeLikeButtonClassName = "card__like-button_active";
 
   function handleCardClick() {
@@ -39,8 +38,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
             aria-label="Добавить в избранное"
             onClick={handleCardLike}
           ></button>
-          {/* <span className="card__like-count">{card.likes.length}</span> */}
-          <span className="card__like-count">{card.likes && card.likes.length}</span>
+          <span className="card__like-count">{card.likes.length}</span>
         </div>
       </div>
 
