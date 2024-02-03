@@ -1,35 +1,56 @@
-import { useEffect } from 'react';
-import PopupWithForm from "./PopupWithForm";
-import useForm from '../hooks/useForm';
+import React from 'react';
+import PopupWithForm from './PopupWithForm.js';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, isLoading }) {
+  const nameElement = React.useRef();
+  const linkElement = React.useRef();
 
-  const { values, handleChange, setValues } = useForm({ name: '', link: '' });
-  
-  function handleSubmit(e) {
-    e.preventDefault();
-    
-    onAddPlace(values);
-  }
-
-  useEffect(() => {
-    setValues({ name: '', link: '' });
+  React.useEffect(() => {
+    nameElement.current.value = '';
+    linkElement.current.value = '';
   }, [isOpen]);
 
+  function handleSubmitForm(e) {
+    e.preventDefault();
+    const newNameElement = nameElement.current.value;
+    const newLinkElement = linkElement.current.value;
+    onAddPlace({ name: newNameElement, link: newLinkElement });
+  }
+
   return (
-    <PopupWithForm 
-      name="element"
+    <PopupWithForm
       title="Новое место"
-      containerName="container"
-      textBtn={isLoading ? 'Сохранение...' : 'Создать'}
+      namePopup="popup-elements"
+      nameForm="form-elements"
+      valueSubmitButton={isLoading ? "Сохранение..." : "Сохранить"}
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}
-      onAddPlace={onAddPlace}>
-        <input type="text" value={values.name} onChange={handleChange} id="title-input" name="name" className="popup__input popup__input_type_title" placeholder="Название" minLength="2" maxLength="30" required/>
-        <span className="title-input-error popup__error"/>
-        <input type="url" value={values.link} onChange={handleChange} id="url-input" name="link" className="popup__input popup__input_type_link" placeholder="Ссылка на картинку" required/>
-        <span className="url-input-error popup__error"/>
+      onSubmit={handleSubmitForm}
+    >
+      <fieldset className="form-elements__input-container">
+        <input
+          type="text"
+          className="popup__input form-elements__item form-elements__item_el_name"
+          id="nameElement"
+          name="nameElement"
+          placeholder="Название"
+          required
+          minLength="2"
+          maxLength="30"
+          ref={nameElement}
+        />
+        <span id="nameElement-error" className="error"></span>
+        <input
+          type="url"
+          className="popup__input form-elements__item form-elements__item_el_link"
+          id="linkElement"
+          name="linkElement"
+          placeholder="Ссылка на картинку"
+          required
+          ref={linkElement}
+        />
+        <span id="linkElement-error" className="error"></span>
+      </fieldset>
     </PopupWithForm>
   )
 }
