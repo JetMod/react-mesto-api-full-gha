@@ -7,7 +7,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import ImagePopup from './ImagePopup';
 import AddPlacePopup from './AddPlacePopup';
-import api from '../utils/Api.js';
+import api from '../utils/Api';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import HomePage from './HomePage';
