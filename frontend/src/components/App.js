@@ -14,7 +14,7 @@ import HomePage from './HomePage';
 import Register from './Register';
 import Login from './Login';
 import InfoTooltip from './InfoTooltip';
-import { register, authorize, checkToken } from '../utils/Auth';
+import { register, authorize, checkToken } from '../../../Auth';
 
 function App() {
 
