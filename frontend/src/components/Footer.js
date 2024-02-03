@@ -1,7 +1,15 @@
-export default function Footer(props) {
+function Footer() {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+
   return (
-    <footer className="footer page__footer">
-      <p className="footer__copyright">© {props.date} Mesto Russia</p>
+    <footer className="footer content__element">
+      <p className="footer__copyright">
+        &copy;&nbsp;{currentYear <= 2022 ? "2022" : `2022&ndash;${currentYear}`}{" "}
+        Студенты Яндекс.Практикума
+      </p>
     </footer>
   );
 }
+
+export default Footer;

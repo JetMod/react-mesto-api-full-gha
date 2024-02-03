@@ -1,58 +1,63 @@
 require('dotenv').config();
-const cors = require('cors');
-const helmet = require('helmet');
+
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const cookieParser = require('cookie-parser');
-const { CORS_OPTIONS } = require('./middlewares/cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const cors = require('cors');
+
+const { routes } = require('./routes');
+const { handleError } = require('./middlewares/handleError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const router = require('./routes');
-const { TIME_LIMIT, MAX_LIMIT } = require('./util/constants');
-const { login, createUser, logout } = require('./controllers/auth');
-const { validationCreateUser, validationLogin } = require('./middlewares/validation');
-const { serverLog } = require('./middlewares/serverlog');
 
-const { PORT = 3001, DB = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+const {
+  PORT = 3000,
+  DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb',
+} = process.env;
+
 const app = express();
-app.use(helmet());
-const limiter = rateLimit({
-  windowMs: TIME_LIMIT,
-  max: MAX_LIMIT,
-});
-app.use(limiter);
-app.use(cors(CORS_OPTIONS));
-app.use(express.json());
-app.use(cookieParser());
 
-app.use(requestLogger); // подключаем логгер запросов
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 минут
+  max: 100, // 100 запросов с одного IP
+});
+
+mongoose
+  .connect(DATABASE_URL)
+  .then(() => {
+    console.log(`Connected to database on ${DATABASE_URL}`);
+  })
+  .catch((err) => {
+    console.log('Error on database connection');
+    console.error(err);
+  });
+
+app.use(limiter);
+
+app.use(cors());
+
+app.use(requestLogger);
+
+app.use(helmet());
+
 // Краш-тест сервера
+// (вызывает принудительное падение сервера
+// для проверки автоматического перезапуска)
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
-// Добавление данных
-app.post('/signup', validationCreateUser, createUser);
-app.post('/signin', validationLogin, login);
-app.get('/signout', logout);
 
-app.use(router);
-app.use(errorLogger); // подключаем логгер ошибок
-mongoose
-  .connect(DB, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('✔ Connected to MongoDB '))
-  .catch((err) => console.log(`✖ DB connection error: ${err}`));
+app.use(routes);
 
-// здесь обрабатываем все ошибки
-app.use(errors());
-app.use(serverLog);
+app.use(errorLogger);
 
-app.listen(PORT, (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(`Listen port ${PORT}`);
-  }
+app.use(errors()); // обработчик ошибок celebrate
+
+app.use(handleError);
+
+app.listen(PORT, () => {
+  console.log(`App started on port ${PORT}`);
 });

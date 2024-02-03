@@ -1,93 +1,203 @@
-const _api = {
-  //BASE_URL: "http://localhost:5000/",
-  BASE_URL: "https://api.prost.nomoredomainsmonster.ru/",
-  HEADERS: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-};
+import { apiConfig } from "./apiConfig";
 
-function _request(url, options) {
-  return fetch(url, options).then(_getResponseData);
-}
-
-function _getResponseData(res) {
-  if (res.ok) {
-    return res.json();
+class Api {
+  /**
+   * Отвечает за осуществление и обработку сетевых запросов к серверу
+   * @constructor
+   *
+   * @param {object} Конфиг запросов к серверу:
+   * - baseUrl - Базовая часть url-адреса сервера
+   * - headers - Заголовки запроса, будут передаваться при каждом обращении
+   */
+  constructor({ baseUrl, headers }) {
+    this._baseUrl = baseUrl;
+    this._headers = headers;
   }
-  return Promise.reject(`Ошибка ${res.status}`);
+
+  setToken(token) {
+    this._headers.authorization = `Bearer ${token}`;
+  }
+
+  /**
+   * Получает данные текущего пользователя
+   * @returns {Promise} Промис с ответом сервера: объект текущего пользователя
+   */
+  getUserInfo() {
+    const url = `${this._baseUrl}/users/me`;
+
+    return fetch(url, {
+      method: "GET",
+      headers: this._headers,
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return res.json().then((res) => {
+        throw new Error(res.message);
+      });
+    });
+  }
+
+  /**
+   * Устанавливает новые имя и профессию текущего пользователя
+   * @param {object} Объект с обновляемыми параметрами:
+   * - name - имя пользователя
+   * - job - профессия пользователя
+   * @returns {Promise} Промис с ответом сервера: обновленный объект пользователя
+   */
+  setUserInfo({ name, about }) {
+    const url = `${this._baseUrl}/users/me`;
+
+    return fetch(url, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({
+        name,
+        about,
+      }),
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return res.json().then((res) => {
+        throw new Error(res.message);
+      });
+    });
+  }
+
+  /**
+   * Устанавливает новый аватар пользователя
+   * @param {string} link - Ссылка на картинку
+   * @returns {Promise} Промис с ответом сервера: обновленный объект пользователя
+   */
+  changeAvatar(link) {
+    const url = `${this._baseUrl}/users/me/avatar`;
+
+    return fetch(url, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({
+        avatar: link,
+      }),
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return res.json().then((res) => {
+        throw new Error(res.message);
+      });
+    });
+  }
+
+  /**
+   * Получает исходные карточки для отрисовки
+   * @returns {Promise} Промис с ответом сервера: массив карточек
+   */
+  getInitialCards() {
+    const url = `${this._baseUrl}/cards`;
+
+    return fetch(url, {
+      method: "GET",
+      headers: this._headers,
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return res.json().then((res) => {
+        throw new Error(res.message);
+      });
+    });
+  }
+
+  /**
+   * Добавляет новую карточку
+   * @param {object} Параметры добавляемой карточки:
+   * - name - отображаемое имя
+   * - link - ссылка на добавляемую картинку
+   * @returns {Promise} Промис с ответом сервера: объект созданной карточки
+   */
+  addNewCard({ name, link }) {
+    const url = `${this._baseUrl}/cards`;
+
+    return fetch(url, {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({
+        name,
+        link,
+      }),
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return res.json().then((res) => {
+        throw new Error(res.message);
+      });
+    });
+  }
+
+  /**
+   * Удаляет карточку с сервера
+   * @param {string} cardId - ID карточки
+   * @returns {Promise} Промис с ответом сервера
+   */
+  deleteCard(cardId) {
+    const url = `${this._baseUrl}/cards/${cardId}`;
+
+    return fetch(url, {
+      method: "DELETE",
+      headers: this._headers,
+    }).then((res) => {
+      if (res.ok) return Promise.resolve();
+      return res.json().then((res) => {
+        throw new Error(res.message);
+      });
+    });
+  }
+
+  /**
+   * Ставит лайк на карточку
+   * @param {string} cardId - ID карточки
+   * @returns {Promise} Промис с массивом новых лайков карточки
+   */
+  _setLike(cardId) {
+    const url = `${this._baseUrl}/cards/${cardId}/likes`;
+
+    return fetch(url, {
+      method: "PUT",
+      headers: this._headers,
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return res.json().then((res) => {
+        throw new Error(res.message);
+      });
+    });
+  }
+
+  /**
+   * Удаляет лайк с карточки
+   * @param {string} cardId - ID карточки
+   * @returns {Promise} Промис с массивом новых лайков карточки
+   */
+  _deleteLike(cardId) {
+    const url = `${this._baseUrl}/cards/${cardId}/likes`;
+
+    return fetch(url, {
+      method: "DELETE",
+      headers: this._headers,
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return res.json().then((res) => {
+        throw new Error(res.message);
+      });
+    });
+  }
+
+  /**
+   * Переключает лайк карточки
+   * @param {string} cardId - ID карточки
+   * @param {boolean} isLiked - Текущий статус лайка
+   * @returns {Promise} Промис с массивом новых лайков карточки
+   */
+  toggleLike(cardId, isLiked) {
+    if (isLiked) {
+      return this._deleteLike(cardId);
+    } else {
+      return this._setLike(cardId);
+    }
+  }
 }
 
-// Api------------------------------------------------------------------> Users
-// Инициализация Users
-export const getDataUser = () => {
-  return _request(_api.BASE_URL + "users/me", {
-    method: "GET",
-    credentials: "include",
-    headers: _api.HEADERS,
-  });
-};
-// Изменение данных User
-export const saveDataInfo = (profileInfo) => {
-  return _request(_api.BASE_URL + "users/me", {
-    method: "PATCH",
-    credentials: "include",
-    headers: _api.HEADERS,
-    body: JSON.stringify({
-      name: profileInfo.name,
-      about: profileInfo.about,
-    }),
-  });
-};
-// Изменение аватара User
-export const saveProfileAvatar = (profileAvatar) => {
-  return _request(_api.BASE_URL + "users/me/avatar", {
-    method: "PATCH",
-    credentials: "include",
-    headers: _api.HEADERS,
-    body: JSON.stringify({ avatar: profileAvatar.avatar }),
-  });
-};
+const api = new Api(apiConfig);
 
-// Api------------------------------------------------------------------> Card
-
-// Инициализация Card
-export const getInitialCards = () => {
-  return _request(_api.BASE_URL + "cards", {
-    method: "GET",
-    credentials: "include",
-    headers: _api.HEADERS,
-  });
-};
-
-// Добавление карточки
-export const saveCardInfo = (cardInfo) => {
-  return _request(_api.BASE_URL + "cards", {
-    method: "POST",
-    credentials: "include",
-    headers: _api.HEADERS,
-    body: JSON.stringify({
-      name: cardInfo.name,
-      link: cardInfo.link,
-    }),
-  });
-};
-
-// Удаление карточки
-export const deleteCard = (cardId) => {
-  return _request(_api.BASE_URL + `cards/${cardId}`, {
-    method: "DELETE",
-    credentials: "include",
-    headers: _api.HEADERS,
-  });
-};
-
-// Удаление/Добавление лайка
-export const changeLikeCardStatus = (cardId, isLiked) => {
-  const method = isLiked ? "PUT" : "DELETE";
-  return _request(_api.BASE_URL + `cards/${cardId}/likes`, {
-    method: method,
-    credentials: "include",
-    headers: _api.HEADERS,
-  });
-};
+export default api;

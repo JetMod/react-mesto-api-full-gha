@@ -1,22 +1,18 @@
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 880px;
-  margin: 0 auto;
   border-bottom: 1px solid rgba(84, 84, 84, 0.7);
-  padding-bottom: 41px;
-}
-
-@media (max-width: 991px) {
-  .header {
-    max-width: calc(100% - 27px * 2);
-  }
+  /* Расположение элементов */
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-areas: "logo menu";
+  justify-items: end;
+  align-items: center;
 }
 
 @media (max-width: 768px) {
-  .header {
-    max-width: 100%;
-    padding: 0 27px 31px;
+  .header_wrappable {
+    /* Сворачивающееся меню */
+    grid-template-areas:
+      "menu menu"
+      "logo button";
   }
 }

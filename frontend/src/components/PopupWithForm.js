@@ -1,34 +1,43 @@
-import Popup from "./Popup";
-export default function PopupWithForm({
-  isOpen,
-  onClose,
+function PopupWithForm({
   name,
   title,
-  onSubmit,
-  submitTitle,
+  buttonText,
+  isOpen,
+  onClose,
   children,
-  elemClass,
-  isValid,
+  onSubmit,
 }) {
+  function handleOverlayClick(event) {
+    if (event.target === event.currentTarget) onClose(event);
+  }
+
   return (
-    <Popup isOpen={isOpen} name={name} onClose={onClose} >
-      <h3 className="popup__title">{title}</h3>
-      <form
-          className={`form form_${name}`}
-          name={`popup__form-${name}`}
+    <div
+      className={`popup popup_type_${name}` + (isOpen && " popup_opened")}
+      onClick={handleOverlayClick}
+    >
+      <div className="popup__container content__element">
+        <h2 className="popup__title">{title}</h2>
+        <form
+          className="popup__form"
+          name={name}
+          noValidate
           onSubmit={onSubmit}
-      >
-        {children}
-        <button
-            disabled={!isValid}
-            className={`form__input-btn ${
-                !isValid ? "form__input-btn_disabled" : ""
-            } ${elemClass ? "form__del-btn" : ""}`}
-            type="submit"
         >
-          {submitTitle}
-        </button>
-      </form>
-    </Popup>
+          {children}
+          <button className="popup__save-button" type="submit">
+            {buttonText}
+          </button>
+        </form>
+        <button
+          className="popup__cancel-button"
+          type="button"
+          aria-label="Закрыть окно"
+          onClick={onClose}
+        ></button>
+      </div>
+    </div>
   );
 }
+
+export default PopupWithForm;

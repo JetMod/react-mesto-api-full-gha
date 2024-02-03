@@ -1,12 +1,47 @@
-const router = require('express').Router();
-const auth = require('../middlewares/auth');
-const usersRoutes = require('./users-routes');
-const cardsRoutes = require('./card-routes');
-const NotFoundError = require('../errors/NotFoundError');
+const express = require('express');
+const { celebrate, Joi } = require('celebrate');
 
-router.use('/users', auth, usersRoutes);
-router.use('/cards', auth, cardsRoutes);
+const { users } = require('./users');
+const { cards } = require('./cards');
+const { login, createUser } = require('../controllers/users');
+const { auth } = require('../middlewares/auth');
+const { NotFoundError } = require('../errors');
+const { LINK } = require('../utils/patterns');
 
-router.use('/*', auth, (req, res, next) => next(new NotFoundError('Такая страница не существует')));
+const routes = express.Router();
 
-module.exports = router;
+routes.all('*', express.json());
+
+routes.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+      avatar: Joi.string().regex(LINK),
+    }),
+  }),
+  createUser,
+);
+
+routes.post(
+  '/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    }),
+  }),
+  login,
+);
+
+routes.use('/users', auth, users);
+routes.use('/cards', auth, cards);
+
+routes.all('*', (req, res, next) => {
+  next(new NotFoundError('Неверный адрес запроса'));
+});
+
+module.exports = { routes };
