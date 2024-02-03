@@ -1,46 +1,34 @@
-import React, {useState} from "react";
-
-const Login = ({onLogin}) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+import SectionSign from "./SectionSign";
+import useForm from "../hooks/useForm";
+import { useEffect } from "react";
 
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        if (!email.trim() || !password.trim()) {
-            return;
-        }
-        onLogin({email, password});
-    };
+function Login({ onLogin }) {
+  const { values, handleChange, setValues } = useForm({ email: '', password: '' });
 
-    return (
-        <div className="auth">
-            <form className="auth__form" onSubmit={handleSubmit}>
-                <h1 className="auth__title">Вход</h1>
-                <input
-                    id="email"
-                    name="email"
-                    className="auth__input"
-                    type="email"
-                    required
-                    placeholder="Email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                />
-                <input
-                    id="password"
-                    name="password"
-                    className="auth__input"
-                    type="password"
-                    required
-                    placeholder="Пароль"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                />
-                <button className="auth__button">Войти</button>
-            </form>
-        </div>
-    );
-};
+  function handleSubmit(e) {
+    e.preventDefault();
+    onLogin({ email: values.email, password: values.password });
+
+    setValues({ email: '', password: '' });
+  }
+
+  useEffect(() => {
+    setValues({ email: '', password: '' });
+  }, [setValues]);
+
+  return (
+    <SectionSign 
+      name="signin"
+      title="Вход"
+      onSubmit={handleSubmit}>
+        <input type="email" name="email" value={values.email} onChange={handleChange} className="login-register__input" placeholder="Email" minLength="2" maxLength="40" required/>
+        <span className="popup__error"/>
+        <input type="password" name="password" value={values.password} onChange={handleChange} className="login-register__input" placeholder="Пароль" minLength="2" maxLength="40" required/>
+        <span className="popup__error"/>
+        <button type="submit" className="login-register__button login-register__button_type_signin">Войти</button>
+    </SectionSign>
+  );
+}
 
 export default Login;

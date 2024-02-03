@@ -1,37 +1,26 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const { errors } = require('celebrate');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
-require('dotenv').config();
-const bodyParser = require('body-parser');
-
-const { PORT = 3000 } = process.env;
-
-const app = express();
-
-const corsOptions1 = {
-  origin: '*',
-};
-
-app.use(cors(corsOptions1));
-
-const { login, createUser } = require('./controllers/users');
-
-const { validateUser } = require('./validate/validate');
-
-const auth = require('./middlewares/auth');
-
-const NotFoundErr = require('./errors/NotFoundErr');
-
-const errorMiddleware = require('./middlewares/error');
-
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { router } = require('./routes');
+const auth = require('./middlewares/auth');
+const serverError = require('./middlewares/serverError');
+const { validationUser } = require('./middlewares/validation');
+const {
+  createUser, login,
+} = require('./controllers/users');
+
+const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+const app = express();
+app.use(cors());
+app.use(helmet());
+
+app.use(express.json());
 
 app.use(requestLogger);
-app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -39,32 +28,22 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-
-app.post('/signin', validateUser, login);
-app.post('/signup', validateUser, createUser);
+app.post('/signin', validationUser, login);
+app.post('/signup', validationUser, createUser);
 
 app.use(auth);
 
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/cards'));
-
-app.use(() => {
-  throw new NotFoundErr('Страница не найдена');
-});
+app.use(router);
 
 app.use(errorLogger);
 
 app.use(errors());
-app.use(errorMiddleware);
 
-async function main() {
-  await mongoose.connect('mongodb://127.0.0.1/mestodb', {
-    useNewUrlParser: true,
-  }).catch(err => console.log(err));
-  console.log('Connected to db');
-  await app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
-  });
-}
+app.use(serverError);
 
-main();
+mongoose.connect(DB_URL);
+
+app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`App listening on port ${PORT}`);
+});

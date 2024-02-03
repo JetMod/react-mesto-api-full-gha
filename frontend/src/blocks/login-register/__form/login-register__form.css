@@ -1,0 +1,9 @@
+.login-register__form {
+  min-width: 358px;
+  margin: 36px auto 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 0;
+}

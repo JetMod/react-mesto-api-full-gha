@@ -1,48 +1,38 @@
-import {useState} from "react";
-import {Link} from "react-router-dom";
+import SectionSign from "./SectionSign";
+import { Link } from "react-router-dom";
+import useForm from "../hooks/useForm";
+import { useEffect } from "react";
 
-const Register = ({onRegister}) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+function Register({ onRegister }) {
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        if (!email.trim() || !password.trim()) {
-            return;
-        }
-        onRegister({email, password});
-    };
+  const { values, handleChange, setValues } = useForm({ email: '', password: '' });
 
-    return (
-        <div className="auth">
-            <h2 className="auth__title">Регистрация</h2>
-            <form className="auth__form" onSubmit={handleSubmit}>
-                <input
-                    className="auth__input"
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    required
-                />
-                <input
-                    className="auth__input"
-                    name="password"
-                    type="password"
-                    placeholder="Пароль"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    required
-                />
-                <button className="auth__button" type="submit">Зарегистрироваться</button>
-            </form>
-            <Link to="/sign-in" className="auth__link-login">
-                Уже зарегистрированы? Войти
-            </Link>
-        </div>
-    );
-};
+  function handleSubmit(e) {
+    e.preventDefault();
+    
+    onRegister({ email: values.email, password: values.password });
+    setValues({ email: '', password: '' });
+  }
+
+  useEffect(() => {
+    setValues({ email: '', password: '' });
+  }, [setValues]);
+
+  return (
+    <SectionSign 
+      name="signup"
+      title="Регистрация"
+      onSubmit={handleSubmit}>
+        <input type="email" name="email" value={values.email} onChange={handleChange} className="login-register__input" placeholder="Email" minLength="2" maxLength="40" required/>
+        <span className="popup__error"/>
+        <input type="password" name="password" value={values.password} onChange={handleChange} className="login-register__input" placeholder="Пароль" minLength="2" maxLength="40" required/>
+        <span className="popup__error"/>
+        <button type="submit" className="login-register__button login-register__button_type_signup">Зарегистрироваться</button>
+        <p className="login-register__subtitle">Уже зарегистрированы? 
+          <Link to={`/signin`} className="login-register__signup-link"> Войти</Link>
+        </p>
+    </SectionSign>
+  );
+}
 
 export default Register;

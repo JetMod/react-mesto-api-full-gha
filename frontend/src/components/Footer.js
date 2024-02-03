@@ -1,11 +1,9 @@
-import React from "react";
-
-const Footer = () => {
+function Footer() {
   return (
     <footer className="footer">
-      <p className="footer__copyright"> &copy; 2023 Гафаров Энвер</p>
+      <p className="footer__copyright">&copy; 2023 Mesto Russia</p>
     </footer>
-  );
-};
+  )
+}
 
 export default Footer;

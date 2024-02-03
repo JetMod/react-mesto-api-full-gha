@@ -1,26 +1,18 @@
-import check from '../images/check.svg';
-import xmark from '../images/xmark.svg';
+import usePopupClose from "../hooks/usePopupClose";
 
-const InfoTooltip = ({ isOpen , onClose, isSuccess }) => {
-    return (
-        <div className={`popup ${isOpen ? 'popup_opened' : ''}`}>
-            <div className="popup__container">
-                <button type="button" className="popup__cancel-button" onClick={onClose} />
-                <img
-                    src={isSuccess ? check : xmark}
-                    alt={
-                        isSuccess ? 'Вы успешно зарегистрировались' : 'Что-то пошло не так'
-                    }
-                    className="popup__bigicon"
-                />
-                <h3 className="popup__title-signup">
-                    {isSuccess
-                        ? 'Вы успешно зарегистрировались!'
-                        : 'Что-то пошло не так! Попробуйте ещё раз.'}
-                </h3>
-            </div>
-        </div>
-    );
-};
+function InfoTooltip({isOpen, onClose, isSuccess, text}) {
+
+  usePopupClose(isOpen, onClose);
+
+  return (
+    <div className={`popup ${isOpen ? 'popup_opened' : ''}`}>
+      <div className="popup__info-container">
+        <button onMouseDown={onClose} type="reset" className="popup__button-close" aria-label="Закрыть" />
+        <div className={`popup__icon ${isSuccess ? 'popup__icon_type_success' : 'popup__icon_type_error'}`}/>
+        <p className="popup__text">{text}</p>
+      </div>
+    </div>
+  )
+}
 
 export default InfoTooltip;

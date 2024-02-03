@@ -1,34 +1,23 @@
-import React from "react";
+import usePopupClose from '../hooks/usePopupClose';
 
-const PopupWithForm = ({
-  isOpen,
-  onClose,
-  title,
-  name,
-  children,
-  onSubmit,
-}) => {
+function PopupWithForm({ title, name, containerName, children, textBtn, isOpen, onClose, onSubmit }) {
+
+  usePopupClose(isOpen, onClose);
+
   return (
-    <div className={`popup popup_type_${name} ${isOpen ? "popup_opened" : ""}`}>
-      <div className="popup__container">
-        <button
-          className="popup__cancel-button popup__cancel-button_type_add"
-          type="button"
-          title="Закрыть окно"
-          onClick={onClose}
-        />
+    <div className={`popup ${isOpen ? 'popup_opened' : ''}`}>
+      <div className={`popup__${containerName}`}>
+        <button onMouseDown={onClose} type="reset" className="popup__button-close" aria-label="Закрыть" />
         <h2 className="popup__title">{title}</h2>
-        <form
-          onSubmit={onSubmit}
-          className="popup__form"
-          id="formAddMesto"
-          name={name}
-        >
+        <form onSubmit={onSubmit} name={`${name}-form`} className={`popup__form popup__form_${name}`}>
           {children}
+          <button type="submit" className={`popup__button popup__button_type_${name}`}>
+            {textBtn}
+          </button>
         </form>
       </div>
     </div>
   );
-};
+}
 
 export default PopupWithForm;
