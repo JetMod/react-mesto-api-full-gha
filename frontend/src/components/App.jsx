@@ -1,14 +1,14 @@
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import ImagePopup from "./ImagePopup";
-import {api} from "../utils/Api";
-import {CurrentUserContext} from "../contexts/CurrentUserContext";
+import { api } from "../utils/api";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Register from "./Register";
 import Login from "./Login";
 import ProtectedRoute from "./ProtectedRoute";
@@ -30,7 +30,7 @@ function App() {
     const [cards, setCards] = useState([]);
 
     useEffect(() => {
-        if(isLoggedIn) {
+        if (isLoggedIn) {
             api
                 .getInitialCards()
                 .then((res) => {
@@ -118,7 +118,7 @@ function App() {
             .then((res) => {
                 console.log("updateUser", res)
 
-                setCurrentUser(prev  => ({...prev, ...res}));
+                setCurrentUser(prev => ({ ...prev, ...res }));
                 closeAllPopups();
             })
             .catch((err) => {
@@ -156,9 +156,9 @@ function App() {
     const handleRegistration = (data) => {
         return authApi.register(data)
             .then((data) => {
-                if(data) {
+                if (data) {
                     setSuccessRegister(true);
-                    navigate("/sign-in", {replace: true});
+                    navigate("/sign-in", { replace: true });
                 }
             })
             .catch((err) => {
@@ -171,13 +171,13 @@ function App() {
     const handleAuthorization = (data) => {
         return authApi.login(data)
             .then((res) => {
-                if(res) {
+                if (res) {
                     setIsLoggedIn(true);
                     console.log(res)
                     api.setAuthorization(res.token)
                     localStorage.setItem("jwt", res.token);
                     setEmail(data.email);
-                    navigate("/", {replace: true});
+                    navigate("/", { replace: true });
                 }
             })
             .catch((err) => {
@@ -188,17 +188,17 @@ function App() {
     const handleLogout = () => {
         setIsLoggedIn(false);
         localStorage.removeItem("jwt");
-        navigate("/sign-in", {replace: true});
+        navigate("/sign-in", { replace: true });
     };
 
     const handleTokenCheck = (jwt) => {
         authApi.getUserInfo(jwt)
             .then((data) => {
-                if(data) {
+                if (data) {
                     setEmail(data.email);
                     api.setAuthorization(jwt)
                     setIsLoggedIn(true);
-                    navigate("/", {replace: true});
+                    navigate("/", { replace: true });
                 }
             })
             .catch((err) => console.log(err));
@@ -220,17 +220,17 @@ function App() {
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className="page">
-                <Header onLogout={handleLogout} isLoggedIn={isLoggedIn} email={email}/>
+                <Header onLogout={handleLogout} isLoggedIn={isLoggedIn} email={email} />
 
                 <Routes>
                     <Route
                         path="/sign-in"
-                        element={<Login onLogin={handleAuthorization}/>}
+                        element={<Login onLogin={handleAuthorization} />}
                     />
 
                     <Route
                         path="/sign-up"
-                        element={<Register onRegister={handleRegistration}/>}
+                        element={<Register onRegister={handleRegistration} />}
                     />
 
                     <Route path={"/"} element={
@@ -246,12 +246,12 @@ function App() {
                             />
                         </ProtectedRoute>
 
-                    }/>
+                    } />
 
-                    <Route path={"*"} element={<Navigate to="/" replace/>}/>
+                    <Route path={"*"} element={<Navigate to="/" replace />} />
                 </Routes>
 
-                {isLoggedIn && <Footer/>}
+                {isLoggedIn && <Footer />}
 
                 <EditProfilePopup
                     onUpdateUser={handleUpdateUser}
@@ -284,9 +284,9 @@ function App() {
                     onClose={closeAllPopups}
                 />
 
-                <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+                <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
-                <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} isSuccess={successRegister}/>
+                <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} isSuccess={successRegister} />
             </div>
         </CurrentUserContext.Provider>
     );
