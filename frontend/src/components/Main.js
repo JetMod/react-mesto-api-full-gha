@@ -1,80 +1,77 @@
-import React from "react";
+import React from 'react';
+import Header from './Header.js';
+import Footer from './Footer.js';
+import Card from './Card.js';
+import avatarEdit from '../images/avatar_edit.png'
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
+import { useNavigate } from 'react-router-dom';
 
-import Card from "./Card";
-import Header from "./Header";
-import CurrentUserContext from "../contexts/CurrentUserContext";
-
-function Main({
-  onEditAvatar,
-  onEditProfile,
-  onAddPlace,
-  onCardClick,
-  cards,
-  onCardLike,
-  onCardDelete,
-  email,
-  onLogout,
-}) {
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLikeClick, onCardDeleteButtonClick, cards, userAuthData, signOut}) {
+  const navigate = useNavigate();
   const currentUser = React.useContext(CurrentUserContext);
+  const cardsElements = cards.map((card) => (
+    <Card
+      card={card}
+      key={card._id}
+      onCardClick={onCardClick}
+      onCardLikeClick={onCardLikeClick}
+      onCardDeleteButtonClick={onCardDeleteButtonClick}
+    />
+  ))
+
+  function handleClickHeaderButton() {
+    signOut();
+    navigate("/signup", { replace: true });
+  }
 
   return (
     <>
-      <Header isWrappable={true}>
-        <p className="header__menu-item">{email}</p>
-        <button href="#" className="header__menu-item" onClick={onLogout}>
-          Выйти
-        </button>
-      </Header>
+      <Header
+        email={userAuthData.email}
+        valueLinkButton="Выйти"
+        onClickHeaderButton={handleClickHeaderButton}
+      />
 
-      <main>
-        <section className="profile content__element">
-          <div className="profile__avatar">
+      <main className="content">
+        <section className="profile root__profile">
+          <div className="profile__avatar-section" onClick={onEditAvatar}>
             <img
-              src={currentUser.avatar}
-              alt="Фотография пользователя"
-              className="profile__avatar-image"
+              className="profile__avatar"
+              alt="Аватар"
+              src={`${currentUser.avatar}`}
             />
-            <button
-              className="profile__avatar-button"
-              type="button"
-              aria-label="Обновить аватар"
-              onClick={onEditAvatar}
-            ></button>
+            <img
+              className="profile__edit-icon"
+              src={`${avatarEdit}`}
+              alt="Изменить"
+            />
           </div>
           <div className="profile__info">
-            <div className="profile__name-block">
-              <h1 className="profile__name">{currentUser.name}</h1>
-              <button
-                type="button"
-                className="profile__button profile__button_type_edit"
-                aria-label="Редактировать профиль"
-                onClick={onEditProfile}
-              ></button>
-            </div>
-            <p className="profile__job">{currentUser.about}</p>
+            <h1 className="profile__name">{currentUser.name}</h1>
+            <button type="button"
+              className="profile__edit-button"
+              aria-label="Редактировать"
+              onClick={onEditProfile}>
+            </button>
+            <p className="profile__activity">{currentUser.about}</p>
           </div>
-          <button
-            type="button"
-            className="profile__button profile__button_type_add"
-            aria-label="Добавить фотографию"
-            onClick={onAddPlace}
-          ></button>
+          <button type="button"
+            className="profile__add-button"
+            aria-label="Добавить"
+            onClick={onAddPlace}>
+          </button>
         </section>
 
-        <section className="cards content__element" aria-label="Фотографии">
-          {cards.map((card) => (
-            <Card
-              card={card}
-              key={card._id}
-              onCardClick={onCardClick}
-              onCardLike={onCardLike}
-              onCardDelete={onCardDelete}
-            />
-          ))}
+        <section className="elements root__elements" aria-label="Интересные места">
+          <ul className="elements__list">
+            {cardsElements};
+          </ul>
         </section>
       </main>
+
+      <Footer />
     </>
-  );
+  )
 }
 
 export default Main;

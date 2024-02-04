@@ -1,5 +1,9 @@
 .login__form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  margin-top: 50px;
+}
+
+@media screen and (max-width: 680px) {
+  .login__form {
+    margin-top: 75px;
+  }
 }

@@ -1,43 +1,23 @@
-function PopupWithForm({
-  name,
-  title,
-  buttonText,
-  isOpen,
-  onClose,
-  children,
-  onSubmit,
-}) {
-  function handleOverlayClick(event) {
-    if (event.target === event.currentTarget) onClose(event);
-  }
+import React from 'react';
 
+function PopupWithForm({ namePopup, nameForm, title, valueSubmitButton, isOpen, onClose, onSubmit, children }) {
   return (
-    <div
-      className={`popup popup_type_${name}` + (isOpen && " popup_opened")}
-      onClick={handleOverlayClick}
-    >
-      <div className="popup__container content__element">
-        <h2 className="popup__title">{title}</h2>
+    <div className={`popup ${namePopup} ${isOpen ? "popup_is-opened" : ""}`}>
+      <div className={`${namePopup}__container`}>
+        <button type="button" className={`popupClose-button ${namePopup}__close-button`} onClick={onClose}></button>
+        <h2 className={`${namePopup}__title`}>{title}</h2>
         <form
-          className="popup__form"
-          name={name}
-          noValidate
+          className={`popup__form ${nameForm} ${namePopup}__form`}
+          name={`${nameForm}`}
           onSubmit={onSubmit}
         >
           {children}
-          <button className="popup__save-button" type="submit">
-            {buttonText}
-          </button>
+          <input type="submit" className="popup__button-save popup__button-save_avalible"
+            value={valueSubmitButton} />
         </form>
-        <button
-          className="popup__cancel-button"
-          type="button"
-          aria-label="Закрыть окно"
-          onClick={onClose}
-        ></button>
       </div>
     </div>
-  );
+  )
 }
 
 export default PopupWithForm;

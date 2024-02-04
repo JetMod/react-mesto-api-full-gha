@@ -1,46 +1,42 @@
-import React from "react";
-import PopupWithForm from "./PopupWithForm";
+import React from 'react';
+import PopupWithForm from './PopupWithForm.js';
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
-  const avatarRef = React.useRef();
+function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
+  const linkAvatar = React.useRef();
 
-  /**
-   * Сброс значений инпутов при открытии/закрытии попапа или при смене пользователя
-   */
   React.useEffect(() => {
-    avatarRef.current.value = "";
+    linkAvatar.current.value = '';
   }, [isOpen]);
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    onUpdateAvatar({
-      avatar: avatarRef.current.value,
-    });
+  function handleSubmitForm(e) {
+    e.preventDefault();
+    const newLink = linkAvatar.current.value;
+    onUpdateAvatar(newLink);
   }
 
   return (
     <PopupWithForm
-      name="change-avatar"
       title="Обновить аватар"
-      buttonText="Сохранить"
+      namePopup="popup-avatar"
+      nameForm="form-avatar"
+      valueSubmitButton={isLoading ? "Сохранение..." : "Сохранить"}
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmitForm}
     >
-      <label className="popup__field">
-        <input
-          type="url"
-          className="popup__input popup__input_type_link"
-          id="avatar-link-input"
-          placeholder="Ссылка на картинку"
-          name="link"
+      <fieldset className="form-avatar__input-container">
+        <input type="url"
+          className="popup__input form-avatar__item form-avatar__item_el_link"
+          id="linkAvatar"
+          name="linkAvatar"
+          placeholder="Ссылка на аватар"
           required
-          ref={avatarRef}
+          ref={linkAvatar}
         />
-        <span className="popup__input-error avatar-link-input-error"></span>
-      </label>
+        <span id="linkAvatar-error" className="error"></span>
+      </fieldset>
     </PopupWithForm>
-  );
+  )
 }
 
 export default EditAvatarPopup;

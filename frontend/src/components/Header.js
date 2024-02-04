@@ -1,56 +1,19 @@
-import React from "react";
+import React from 'react';
+import headerLogo from "../images/header_logo.svg";
 
-import logo from "../images/header__logo_light.svg";
-
-function Header({ children, isWrappable }) {
-  const [isMenuOpened, setIsMenuOpened] = React.useState(false);
-
-  function handleOpenMenu() {
-    setIsMenuOpened((state) => !state);
-  }
-
+function Header({email, valueLinkButton, onClickHeaderButton}) {
+  
   return (
-    <header
-      className={
-        "header content__element content__element_type_header" +
-        (isWrappable ? " header_wrappable" : "")
-      }
-    >
-      <img
-        src={logo}
-        alt="Сервис Место-Россия. Логотип"
-        className="header__logo"
-      />
-
-      {isWrappable && (
-        <button
-          type="button"
-          className={
-            "header__menu-button" +
-            (isMenuOpened ? " header__menu-button_opened" : "")
-          }
-          aria-label="Открыть меню"
-          onClick={handleOpenMenu}
-        ></button>
-      )}
-
-      {children && (
-        <nav
-          className={
-            "header__menu" + (isMenuOpened ? " header__menu_opened" : "")
-          }
-        >
-          <ul className="header__menu-list">
-            {(children.length > 1 ? children : [children]).map((item, pos) => (
-              <li className="header__menu-item" key={pos}>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
+    <header className="header root__header">
+      <div className="header__logo-container">
+        <img className="logo" src={headerLogo} alt="Логотип" />
+      </div>
+      <div className="header__info-container">
+        <p className="header__user-email">{email}</p>
+        <button type="button" className="header__login-out-button" onClick={onClickHeaderButton}>{valueLinkButton}</button>
+      </div>
     </header>
-  );
+  )
 }
 
 export default Header;

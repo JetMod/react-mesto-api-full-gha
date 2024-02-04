@@ -1,92 +1,93 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Header from "./Header";
-import auth from "../utils/Auth";
-import api from '../utils/api';
+import React from 'react';
+import Header from './Header.js';
+import Footer from './Footer.js';
+import { useNavigate } from 'react-router-dom';
+import AuthenticationForm from './AuthenticationForm.js';
 
-function Login({ handleShowInfoMessage, onLogin }) {
-  const defaultValues = {
-    email: "",
-    password: "",
-  };
-
-  const [inputs, setInputs] = React.useState(defaultValues);
-
+function Login({ onAuthorizationUser, isLoading }) {
   const navigate = useNavigate();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  function handleChange(event) {
-    const value = event.target.value;
-    const name = event.target.name;
-    setInputs((state) => ({ ...state, [name]: value }));
+  function handleChangeEmail(e) {
+    setEmail(e.target.value);
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    auth
-      .authorize(inputs)
-      .then(res => {
-        const token = res.token;
-
-        if (token) {
-          localStorage.setItem('token', token);
-          api.setToken(token);
-        }
-
-        resetForm();
-        onLogin();
-        navigate("/");
-      })
-      .catch((err) => {
-        const text = err.message || "Что-то пошло не так! Попробуйте еще раз.";
-        handleShowInfoMessage({
-          text: text,
-          isSuccess: false,
-        });
-      });
+  function handleChangePassword(e) {
+    setPassword(e.target.value);
   }
 
-  function resetForm() {
-    setInputs({ ...defaultValues });
+  function handleSubmitForm(e) {
+    e.preventDefault();
+    onAuthorizationUser({ email, password });
+  }
+
+  function handleClickHeaderButton() {
+    return navigate("/signup", { replace: true });
   }
 
   return (
     <>
-      <Header>
-        <Link to="/sign-up" className="header__menu-item">
-          Регистрация
-        </Link>
-      </Header>
+      <Header
+        email=""
+        valueLinkButton="Регистрация"
+        onClickHeaderButton={handleClickHeaderButton}
+      />
 
-      <main>
-        <div className="login content__element">
+      <AuthenticationForm
+        name="login"
+        title="Вход"
+        email={email}
+        password={password}
+        handleSubmitForm={handleSubmitForm}
+        handleChangeEmail={handleChangeEmail}
+        handleChangePassword={handleChangePassword}
+        valueSubmitButton={isLoading ? "Вход..." : "Войти"}
+      />
+      
+
+      {/* <div className="login">
+        <div className="login__container">
           <h2 className="login__title">Вход</h2>
-          <form className="login__form" onSubmit={handleSubmit} noValidate>
-            <input
-              type="email"
-              className="login__input"
-              placeholder="Email"
-              name="email"
-              value={inputs.email}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="password"
-              className="login__input"
-              placeholder="Пароль"
-              name="password"
-              value={inputs.password}
-              onChange={handleChange}
-              required
-            />
-            <button rype="submit" className="login__submit-button">
-              Войти
-            </button>
+          <form
+            className="form-login login__form"
+            name="form-login"
+            onSubmit={handleSubmitForm}
+          >
+            <fieldset className="form-login__input-container">
+              <input
+                type="email"
+                className="form-login__item form-login__item_el_name"
+                id="email"
+                name="email"
+                placeholder="Email"
+                required
+                minLength="5"
+                maxLength="100"
+                value={email || ''}
+                onChange={handleChangeEmail} />
+              <span id="name-error" className="error"></span>
+              <input type="password"
+                className="form-login__item login-register__item_el_activity"
+                id="password"
+                name="password"
+                placeholder="Пароль"
+                required
+                minLength="5"
+                maxLength="30"
+                value={password || ''}
+                onChange={handleChangePassword} />
+              <span id="activity-error" className="error"></span>
+            </fieldset>
+            <input type="submit" className="login__save-button"
+              value={isLoading ? "Вход..." : "Войти"} />
           </form>
         </div>
-      </main>
+      </div> */}
+
+      <Footer />
     </>
-  );
+  )
 }
 
 export default Login;

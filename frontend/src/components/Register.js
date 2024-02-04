@@ -1,93 +1,55 @@
 import React from 'react';
+import Header from './Header.js';
+import Footer from './Footer.js';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from './Header';
-import auth from '../utils/Auth';
+import AuthenticationForm from './AuthenticationForm.js';
 
-function Register({ handleShowInfoMessage }) {
-  const defaultValues = {
-    email: '',
-    password: '',
-  };
-
-  const [inputs, setInputs] = React.useState(defaultValues);
-
+function Register({ onRegistrationUser, isLoading }) {
   const navigate = useNavigate();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  function handleChange(event) {
-    const value = event.target.value;
-    const name = event.target.name;
-    setInputs((state) => ({ ...state, [name]: value }));
+  function handleChangeEmail(e) {
+    setEmail(e.target.value);
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    auth
-      .register(inputs)
-      .then((res) => {
-        handleShowInfoMessage({
-          text: 'Вы успешно зарегистрировались!',
-          isSuccess: true,
-        });
-        resetForm();
-        navigate('/sign-in');
-      })
-      .catch((err) => {
-        const text = err.message || 'Что-то пошло не так! Попробуйте еще раз.';
-        handleShowInfoMessage({
-          text: text,
-          isSuccess: false,
-        });
-      });
+  function handleChangePassword(e) {
+    setPassword(e.target.value);
   }
 
-  function resetForm() {
-    setInputs({ ...defaultValues });
+  function handleSubmitForm(e) {
+    e.preventDefault();
+    onRegistrationUser({ email, password });
+  }
+
+  function handleClickHeaderButton() {
+    navigate("/signin", { replace: true });
   }
 
   return (
     <>
-      <Header>
-        <Link to="/sign-in" className="header__menu-item">
-          Войти
-        </Link>
-      </Header>
+      <Header
+        email=""
+        valueLinkButton="Войти"
+        onClickHeaderButton={handleClickHeaderButton}
+      />
 
-      <main>
-        <div className="login content__element">
-          <h2 className="login__title">Регистрация</h2>
-          <form className="login__form" onSubmit={handleSubmit} noValidate>
-            <input
-              type="email"
-              className="login__input"
-              placeholder="Email"
-              name="email"
-              value={inputs.email}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="password"
-              className="login__input"
-              placeholder="Пароль"
-              name="password"
-              value={inputs.password}
-              onChange={handleChange}
-              required
-            />
-            <button rype="submit" className="login__submit-button">
-              Зарегистрироваться
-            </button>
-          </form>
-          <p className="login__extra-text">
-            Уже зарегистрированы?{' '}
-            <Link className="login__link" to="/sign-in">
-              Войти
-            </Link>
-          </p>
-        </div>
-      </main>
+      <AuthenticationForm
+        name="register"
+        title="Регистрация"
+        email={email}
+        password={password}
+        handleSubmitForm={handleSubmitForm}
+        handleChangeEmail={handleChangeEmail}
+        handleChangePassword={handleChangePassword}
+        valueSubmitButton={isLoading ? "Регистрация..." : "Зарегистрироваться"}
+      >
+        <p className="register__text">Уже зарегистрированы? <Link className="register__link" to="/signin">Войти</Link> </p>
+      </AuthenticationForm >
+
+      <Footer />
     </>
-  );
+  )
 }
 
 export default Register;
